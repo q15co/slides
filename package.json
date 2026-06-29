@@ -14,5 +14,8 @@
     "@slidev/theme-seriph": "^0.25.0",
     "slidev-theme-catppuccin-frappe": "^0.1.0",
     "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.105.0"
   }
 }
