@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.env
+.env.local
+.vercel
+.netlify
+
+# Slidev build artifacts (keep screenshots tracked)
+.vercel-cache/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
