@@ -80,6 +80,39 @@ fonts:
   svg .node:hover ellipse {
     filter: brightness(1.15) saturate(1.3);
   }
+
+  /* Mermaid contrast fix: force light-text on the dark surface fills
+     we just chose, regardless of what Slidev's runtime computes. */
+  svg .node text,
+  svg .node .label,
+  svg .node.default text,
+  svg .node.cli text,
+  svg .node.editor text,
+  svg .node.framework text,
+  svg .node.runtime text,
+  svg .node.long text,
+  svg .node.q15 text,
+  svg .node.mem text,
+  svg .node.cog text,
+  svg .node.ext text {
+    fill: #cad6f5 !important;
+    color: #cad6f5 !important;
+  }
+  svg .edgeLabel text,
+  svg .edgeLabel,
+  svg .messageText,
+  svg text {
+    fill: #cad6f5 !important;
+  }
+
+  /* Shrink sequence diagrams a touch and lift them so the bottom
+     loop ("update history") doesn't clip. */
+  svg.sequenceDiagram,
+  svg[id*="sequence"] {
+    margin-top: -1.5rem;
+    transform: scale(0.95);
+    transform-origin: top center;
+  }
 </style>
 
 <script setup>
@@ -108,6 +141,16 @@ A tour through the model harness layer, told through what I learned building q15
 <div class="abs-br m-6 text-xs opacity-50">
   Press <kbd>space</kbd> for next slide · <kbd>o</kbd> for overview
 </div>
+
+<style>
+  /* Cover (slide 1) — title is long, so reduce h1 size a touch so
+     it wraps cleanly inside the slide canvas */
+  .slidev-page-1 h1 .title-breath {
+    font-size: 52px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+</style>
 ---
 layout: default
 ---
@@ -208,11 +251,11 @@ flowchart LR
     C --> D[Custom Runtimes<br/>q15 · OpenClaw · Hermes Agent]
     D --> E[Long-Running Orchestrators<br/>Service-mode daemons]
 
-    classDef cli fill:#dbeafe,stroke:#2563eb
-    classDef editor fill:#dcfce7,stroke:#16a34a
-    classDef framework fill:#fef3c7,stroke:#d97706
-    classDef runtime fill:#fce7f3,stroke:#db2777
-    classDef long fill:#e9d5ff,stroke:#9333ea
+    classDef cli fill:#303446,stroke:#89b4fa,color:#cad6f5
+    classDef editor fill:#303446,stroke:#a6e3a1,color:#cad6f5
+    classDef framework fill:#303446,stroke:#fab387,color:#cad6f5
+    classDef runtime fill:#303446,stroke:#f5c2e7,color:#cad6f5
+    classDef long fill:#303446,stroke:#cba6f7,color:#cad6f5
 
     class A cli
     class B editor
@@ -400,8 +443,8 @@ flowchart LR
 
     L --> OUT[Output<br/>text · tool · event]
 
-    classDef ext fill:#fef3c7,stroke:#d97706
-    classDef q15 fill:#dbeafe,stroke:#2563eb
+    classDef ext fill:#303446,stroke:#f9e2af,color:#cad6f5
+    classDef q15 fill:#303446,stroke:#89b4fa,color:#cad6f5
     class P,T,MEM,COG,SEL,L,OUT q15
 ```
 
@@ -489,8 +532,8 @@ flowchart TB
     EXTRACT --> SEM
     SEM <--> CONS[Consolidation]
 
-    classDef mem fill:#dbeafe,stroke:#2563eb
-    classDef cog fill:#fef3c7,stroke:#d97706
+    classDef mem fill:#303446,stroke:#89b4fa,color:#cad6f5
+    classDef cog fill:#303446,stroke:#fab387,color:#cad6f5
     class SHORT,LONG,SEM mem
     class COMP,EXTRACT,CONS cog
 ```
@@ -513,6 +556,8 @@ layout: default
 ---
 
 # What I'd recommend
+
+A pragmatic answer for whoever's listening:
 
 <v-clicks>
 
