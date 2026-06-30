@@ -206,14 +206,14 @@ The model is a brain in a jar. Smart, but inert. It can think, but it can't *act
 
 A **harness** gives the brain:
 
-- **Hands** — tools, file system, shell, HTTP, custom actions
-- **Eyes** — context, memory, observation of results
-- **A loop** — keep going until the task is done
+- **Hands** — tools, file system, shell, HTTP
+- **Eyes** — context, memory, observation
+- **A loop** — keep going until done
 - **Agency** — the ability to act in the world
 
-That's where the word **agent** comes from. The model isn't the agent. The model + harness is the agent.
+That's where the word **agent** comes from. The model + harness is the agent.
 
-The word **harness** comes from *test harness* — the scaffolding around code that makes it runnable, observable, and repeatable. Same idea here.
+The word **harness** comes from *test harness* — the scaffolding around code that makes it runnable and repeatable.
 
 </v-clicks>
 
@@ -488,7 +488,7 @@ layout: default
 
 The story in one slide:
 
-```mermaid {scale: 0.55}
+```mermaid {scale: 0.45}
 flowchart LR
     P[Model Providers<br/>OpenAI · Anthropic · Ollama] --> L[Loop]
     T[Tools<br/>fs · shell · web · custom] --> L
@@ -506,9 +506,8 @@ flowchart LR
 <v-clicks>
 
 - The model API is the smallest piece. Everything else *is* the harness.
-- Memory is the part that makes a runtime interesting
-- Cognition (background summarisation, consolidation) is the part that makes it *durable*
-- Provider abstraction (OpenAI-compat) means you stop caring which model is on the other end
+- Memory makes a runtime interesting. Cognition makes it *durable*.
+- Provider abstraction means you stop caring which model is on the other end
 
 </v-clicks>
 ---
@@ -577,7 +576,7 @@ layout: default
 
 The hardest part of a harness isn't calling the model. It's **what to remember, when to forget, and how to keep it consistent across sessions.**
 
-```mermaid {scale: 0.55}
+```mermaid {scale: 0.45}
 flowchart TB
     SHORT[Working Memory<br/>current context] <--> LONG[Long-term Memory<br/>user facts, decisions]
     LONG <--> SEM[Semantic Memory<br/>curated knowledge]
@@ -595,15 +594,14 @@ flowchart TB
 
 <v-clicks>
 
-- **Memory** is what the harness knows (facts, state, history)
-- **Cognition** is what the harness does with that knowledge (summarise, extract, consolidate, prune)
-- Together they form the agent's "self" — the thing that makes session N+1 not start from zero
+- **Memory** is what the harness knows. **Cognition** is what it does with it.
+- Together they make session N+1 not start from zero
 
 </v-clicks>
 
-<div v-click class="mt-6 p-4 bg-blue-500 bg-opacity-10 rounded-lg text-sm">
+<div v-click class="mt-4 p-4 bg-blue-500 bg-opacity-10 rounded-lg text-sm">
 
-**The mental model**: memory is the database. Cognition is the daemon that runs `cron` on it. Without cognition, memory grows forever and becomes noise.
+**Mental model**: memory is the database. Cognition is the daemon that runs `cron` on it.
 
 </div>
 ---
