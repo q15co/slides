@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "q15-slides",
+  "compatibility_date": "2026-06-30",
+  "build": {
+    "command": "npm run build && rm -f dist/_redirects"
+  },
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "slides.q15.co", "custom_domain": true }
+  ]
+}
