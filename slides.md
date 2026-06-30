@@ -407,12 +407,13 @@ Walk through the categories left to right: CLI assistants, editor integrations, 
 Transition: "Underneath all of these, the same loop is running."
 -->
 ---
-layout: default
+layout: two-cols
+layoutClass: gap-4
 ---
 
 # The agent loop — same shape everywhere
 
-```mermaid {scale: 0.65}
+```mermaid {scale: 0.5}
 sequenceDiagram
     participant U as User
     participant H as Harness
@@ -431,6 +432,10 @@ sequenceDiagram
     H->>H: update history
 ```
 
+::right::
+
+<div class="ml-4 mt-16">
+
 <v-clicks>
 
 - Differences: **tools**, **loop length**, **what's remembered**
@@ -438,6 +443,8 @@ sequenceDiagram
 - Everything else is the harness
 
 </v-clicks>
+
+</div>
 <!--
 Show the universal pattern. Every harness, from Claude Code to q15, runs the same loop.
 
