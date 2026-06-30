@@ -9,6 +9,7 @@ info: |
 
   Built with Slidev. See https://sli.dev for documentation.
 class: text-center
+background: /title-bg.png
 highlighter: shiki
 lineNumbers: false
 drawings:
@@ -241,10 +242,14 @@ Model API: text-in, text-out. That's it.
 
 <v-click>
 
-<div class="mt-6 text-center text-2xl font-bold">
+<div class="mt-4 text-center text-2xl font-bold">
 
 Agent = Model + Harness
 
+</div>
+
+<div class="mt-4 flex justify-center">
+  <img src="/agent-model-harness.png" class="rounded-lg" style="max-height: 200px; opacity: 0.85" />
 </div>
 
 </v-click>
@@ -363,7 +368,7 @@ layout: default
 
 # The harness spectrum
 
-```mermaid {scale: 0.55}
+```mermaid {scale: 0.75}
 flowchart LR
     A[CLI Assistants<br/>Claude Code · Codex CLI · OpenCode] --> B[Editor Integrations<br/>Cline · Continue · Roo Code]
     B --> C[Autonomous Frameworks<br/>LangChain · AutoGen · CrewAI]
@@ -407,7 +412,7 @@ layout: default
 
 # The agent loop — same shape everywhere
 
-```mermaid {scale: 0.42}
+```mermaid {scale: 0.65}
 sequenceDiagram
     participant U as User
     participant H as Harness
@@ -577,7 +582,8 @@ The error message becomes a prompt — the agent fixes it without human input.
 Transition: "This leads to the most important habit: durable solutions to failure classes."
 -->
 ---
-layout: default
+layout: two-cols
+layoutClass: gap-8
 ---
 
 # Durable solutions to failure classes
@@ -600,6 +606,23 @@ In q15: **cognition jobs** — verification, consolidation, extraction. Each on 
 </div>
 
 </v-click>
+
+::right::
+
+<div class="mt-8">
+
+```mermaid {scale: 0.5}
+flowchart LR
+    O[Observe] --> D[Diagnose]
+    D --> E[Engineer]
+    E --> S[Step back]
+    S -.->|repeat| O
+
+    classDef step fill:#303446,stroke:#89b4fa,color:#cad6f5
+    class O,D,E,S step
+```
+
+</div>
 <!--
 The core engineering discipline: when an agent makes a mistake, don't just fix it. Engineer a solution so it never makes that mistake again.
 
@@ -618,6 +641,10 @@ layout: default
 ---
 
 # The context window problem
+
+<div class="flex justify-center mb-4">
+  <img src="/context-window.png" class="rounded-lg" style="max-height: 180px; opacity: 0.75" />
+</div>
 
 <v-clicks>
 
@@ -655,12 +682,13 @@ Walk through the three problems:
 Transition: "Here's how q15 approaches this differently."
 -->
 ---
-layout: default
+layout: two-cols
+layoutClass: gap-4
 ---
 
 # Memory as architecture — q15's approach
 
-```mermaid {scale: 0.45}
+```mermaid {scale: 0.55}
 flowchart TB
     SHORT[Working Memory<br/>active state, open threads] <--> LONG[Long-term Memory<br/>user facts, decisions]
     LONG <--> SEM[Semantic Memory<br/>curated knowledge]
@@ -676,13 +704,20 @@ flowchart TB
     class COMP,EXTRACT,CONS cog
 ```
 
+::right::
+
+<div class="ml-4 mt-8">
+
 <v-clicks>
 
-- Full transcript persists on disk. Nothing deleted.
-- Working memory = what it knows. Cognition = what it does.
-- **One conversation. No "new chat" button.**
+- Full transcript persists. Nothing deleted.
+- Working memory = what it knows
+- Cognition = what it does with it
+- **One conversation. No "new chat."**
 
 </v-clicks>
+
+</div>
 <!--
 q15 doesn't compress history. It maintains structured memory artifacts through background cognition jobs.
 
@@ -704,9 +739,7 @@ layoutClass: gap-8
 
 <v-clicks>
 
-Most platforms: one process, one trust domain.
-
-Prompt injection → attacker has everything.
+Most platforms: one process, one trust domain. Prompt injection → attacker has everything.
 
 </v-clicks>
 
@@ -793,6 +826,10 @@ layout: default
 ---
 
 # Stacking leverage
+
+<div class="flex justify-center mb-4">
+  <img src="/stacking-leverage.png" class="rounded-lg" style="max-height: 160px; opacity: 0.75" />
+</div>
 
 <v-clicks>
 
