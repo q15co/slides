@@ -218,6 +218,10 @@ layout: default
 
 # Why do we need one?
 
+<div class="grid grid-cols-2 gap-8 items-center mt-4">
+
+<div>
+
 The model gives you a brain in a jar. To do anything in the world, that brain needs:
 
 <v-clicks>
@@ -231,7 +235,23 @@ The model gives you a brain in a jar. To do anything in the world, that brain ne
 
 </v-clicks>
 
-<div v-click class="mt-8 p-4 bg-blue-500 bg-opacity-10 rounded-lg">
+</div>
+
+<div class="flex flex-col items-center">
+
+<img src="/images/brain-in-dome.png" alt="A vintage 80s cartoon villain action figure: a mean pink brain in the open chest of a chunky blue robot" class="rounded-lg shadow-2xl" style="max-height: 460px; width: auto;" />
+
+<div class="text-xs opacity-60 mt-3 text-center">
+
+Brain in a body. The model gives you the brain. The harness gives the brain hands, eyes, and a way to act.
+
+</div>
+
+</div>
+
+</div>
+
+<div v-click="6" class="mt-6 p-4 bg-blue-500 bg-opacity-10 rounded-lg">
 
 **The pattern**: every useful AI application builds these six things. The only question is whether you build them yourself or pick up someone else's harness.
 
