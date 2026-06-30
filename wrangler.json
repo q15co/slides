@@ -10,6 +10,9 @@
     "not_found_handling": "single-page-application"
   },
   "routes": [
-    { "pattern": "slides.q15.co", "custom_domain": true }
+    {
+      "pattern": "slides.q15.co",
+      "custom_domain": true
+    }
   ]
 }

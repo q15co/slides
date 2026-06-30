@@ -105,13 +105,11 @@ fonts:
     fill: #cad6f5 !important;
   }
 
-  /* Shrink sequence diagrams a touch and lift them so the bottom
-     loop ("update history") doesn't clip. */
+  /* Lift sequence diagrams so the bottom loop ("update history")
+     doesn't clip. Mermaid scale attribute handles sizing. */
   svg.sequenceDiagram,
   svg[id*="sequence"] {
-    margin-top: -1.5rem;
-    transform: scale(0.95);
-    transform-origin: top center;
+    margin-top: -1rem;
   }
 </style>
 
@@ -334,33 +332,30 @@ layout: default
 
 # What a harness actually does
 
-The agent loop, universal shape:
+The agent loop — same shape everywhere:
 
-```mermaid {scale: 0.6}
+```mermaid {scale: 0.42}
 sequenceDiagram
-    participant U as User / Trigger
+    participant U as User
     participant H as Harness
     participant M as Model
     participant T as Tools
 
     U->>H: input + history
-    H->>H: assemble context
     H->>M: prompt + tools
     M-->>H: text + tool_calls
-    H->>H: parse + validate
-    alt tool calls present
-        H->>T: execute tool(s)
-        T-->>H: tool results
+    alt tool calls
+        H->>T: execute
+        T-->>H: results
     else done
-        H->>U: final output
+        H->>U: output
     end
     H->>H: update history
 ```
 
 <v-clicks>
 
-- **Same shape** across every harness I looked at
-- The differences are in **what counts as a tool**, **how long the loop runs**, **what gets remembered**
+- **Same shape** across every harness — differences are in **what counts as a tool**, **how long the loop runs**, **what gets remembered**
 - The model never sees the loop — it sees one turn at a time
 
 </v-clicks>
