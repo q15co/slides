@@ -209,7 +209,7 @@ A **harness** gives the brain:
 - **A loop** — keep going until done
 - **Agency** — the ability to act in the world
 
-That's where the word **agent** comes from. The model + harness is the agent.
+That's what makes it an **agent** — the model + harness together. The equation is simple: Agent = Model + Harness.
 
 The word **harness** comes from *test harness* — the scaffolding around code that makes it runnable and repeatable.
 
@@ -299,7 +299,7 @@ Same primitives, different opinion. Each category makes different trade-offs abo
 
 ```mermaid {scale: 0.55}
 flowchart LR
-    A[CLI Assistants<br/>Claude Code · Codex CLI] --> B[Editor Integrations<br/>Cline · Continue · OpenCode]
+    A[CLI Assistants<br/>Claude Code · Codex CLI · OpenCode] --> B[Editor Integrations<br/>Cline · Continue · Roo Code]
     B --> C[Autonomous Frameworks<br/>LangChain · AutoGen · CrewAI]
     C --> D[Custom Runtimes<br/>q15 · OpenClaw · Hermes Agent]
     D --> E[Long-Running Orchestrators<br/>Service-mode daemons]
@@ -404,7 +404,7 @@ layout: two-cols
 
 # Editor integrations
 
-**Cline, Continue, OpenCode**
+**Cline, Continue, Roo Code**
 
 Editor-first. Sidebar UI, diff visualisation, model picker.
 
@@ -414,7 +414,7 @@ Editor-first. Sidebar UI, diff visualisation, model picker.
 - Diffs are the primary UI primitive
 - Often a thin shell over an OpenAI-compatible API
 - Best for: pair-programming style workflows
-- Worst for: anything outside the editor (no terminal-first reach)
+- Worst for: anything outside the editor
 
 </v-clicks>
 
@@ -610,7 +610,7 @@ A pragmatic answer for whoever's listening:
 <v-clicks>
 
 - **For personal dev work** → Claude Code or Codex CLI. Don't over-think it.
-- **For pair-programming in the IDE** → Cline or OpenCode. The diff-first UX is genuinely good.
+- **For pair-programming in the IDE** → Cline or Continue. The diff-first UX is genuinely good.
 - **For understanding** → build a 50-line harness yourself. One model, one tool, one loop. Everything else becomes obvious.
 - **For shipping a product** → pick an agent runtime (q15, Hermes, OpenClaw) and stop reinventing orchestration.
 - **For long-running agents** → make sure the runtime treats memory + cognition as first-class. Otherwise you'll bolt it on later and it will be messy.
