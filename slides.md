@@ -137,6 +137,15 @@ What a model harness is, why it matters, and what building q15 taught me about t
     letter-spacing: -0.025em;
   }
 </style>
+<!--
+Welcome the audience. Brief intro: who I am, what this talk is about.
+
+This is a talk about harness engineering — what it means, why it matters, and what building my own agent runtime taught me about the rest of the ecosystem.
+
+The talk is based on Ryan Lopopolo's "Harness Engineering" talk from OpenAI, with additional ideas from Mario Zechner's work on Pi.
+
+Keep this brief — 30 seconds max. The real content starts on the next slide.
+-->
 ---
 layout: default
 ---
@@ -170,6 +179,17 @@ The question is no longer "can the model do it?" — it's "what do I wrap around
 </div>
 
 </v-click>
+<!--
+Open with the thesis: coding agents crossed a threshold in late 2025. Models can now do the full job of a software engineer.
+
+[click] Emphasize that implementation is no longer the bottleneck. Code is free to produce, refactor, delete. The models are parallel and patient.
+
+[click] The key shift: every engineer is now effectively a staff engineer. You have as many team members as you can drive concurrently. Your job is deploying that capacity.
+
+[click] Land the central question: it's not "can the model do it?" but "what do I wrap around the model so it does it reliably?" That's the whole talk in one sentence.
+
+Transition: "So if code is free, what's actually scarce? Three things."
+-->
 ---
 layout: default
 ---
@@ -197,6 +217,18 @@ Your role shifts from <em>writing code</em> to <em>building systems that enable 
 </div>
 
 </v-click>
+<!--
+Frame this as the economic shift: code is abundant, but three things are not.
+
+[click] Walk through each scarce resource:
+- Human time — your attention is the most expensive thing. Shoulder-surfing the agent is not scalable.
+- Human and model attention — consistency across the codebase reduces the attention the model needs per task. This is why conventions matter.
+- Context window — fixed, finite. This is the hardest problem and we'll come back to it.
+
+[click] The role shift: you're no longer writing code, you're building systems that enable agents to write code. Structures, guardrails, feedback loops, memory.
+
+Transition: "So what exactly is the thing you're building? Let's define it."
+-->
 ---
 layout: default
 ---
@@ -228,6 +260,17 @@ The model is the brain. The harness is the body. Without the body, the brain jus
 </div>
 
 </v-click>
+<!--
+Define the core concept. The idea was articulated by Mitchell Hashimoto and formalized by Ryan Lopopolo at OpenAI.
+
+[click] Start from first principles: a model API gives you text-in, text-out. Nothing else. No tools, no memory, no loop, no error handling. That's the raw material.
+
+A harness is everything you wrap around that API to make it actually do things: system prompts, tools, the agent loop, model selection, output parsing, error recovery, history management.
+
+[click] The formula: Agent = Model + Harness. The model is the brain, the harness is the body. Without the body, the brain just thinks. This is the one-sentence takeaway for the whole talk.
+
+Transition: "How did I end up building one? It wasn't planned."
+-->
 ---
 layout: default
 ---
@@ -257,6 +300,21 @@ Then I had an idea: a **man-in-the-middle proxy** that injects credentials at th
 So I thought: why not just build the whole harness? You have models to help you build it. And if you build your own, you add exactly the features you want.
 
 </v-clicks>
+<!--
+This is the origin story — keep it personal and authentic.
+
+[click] I installed OpenClaw and used it. It was great — until I realized it was running arbitrary code on my machine.
+
+I wanted to make it useful: web access, GitHub, email, bash. Without those, an agent is useless. But I didn't want API keys in the agent's environment.
+
+[click] I looked at PicoClaw — same Go ecosystem, same problem. The agent needs to run code where your credentials live.
+
+[click] Then the key idea: a man-in-the-middle proxy that injects credentials at the network layer. The agent never sees the keys. I tested it. It worked.
+
+So I thought: why not build the whole harness? You have models to help you build it. And if you build your own, you add exactly the features you want.
+
+Transition: "But why build your own instead of using an existing one?"
+-->
 ---
 layout: default
 ---
@@ -290,6 +348,17 @@ Mario Zechner, who built Pi (the agent core that OpenClaw runs on), puts it blun
 </div>
 
 </v-click>
+<!--
+[click] The argument for building your own: existing runtimes are general-purpose software. They support every chat client, every integration, every deployment. The codebases are massive.
+
+If you build your own, you only add what you need. The codebase stays smaller and more manageable.
+
+[click] The cost argument: you have models that write code, you know what your agent should do. The marginal cost of building your own is lower than understanding someone else's 50,000-line runtime.
+
+[click] Mario Zechner's point: "My context wasn't my context." When you use someone else's harness, they control your context. System prompts change on every release, tools get removed, system reminders get injected behind your back. This is a sovereignty argument — who controls the agent's perception of the world?
+
+Transition: "So where does q15 sit in the landscape? Let's map the spectrum."
+-->
 ---
 layout: default
 ---
@@ -327,6 +396,15 @@ The arrow is **not** "better than." It's "more autonomous, more infrastructure, 
 </div>
 
 </v-click>
+<!--
+Show the spectrum. Same primitives, different opinions about who runs it, where it runs, and how autonomous it is.
+
+Walk through the categories left to right: CLI assistants, editor integrations, autonomous frameworks, custom runtimes, long-running orchestrators. Name a few examples in each.
+
+[click] Emphasize: the arrow is NOT "better than." It's "more autonomous, more infrastructure, more moving parts." A CLI assistant is the right answer for most developer workflows. A custom runtime is the right answer when you're shipping a product. Context matters.
+
+Transition: "Underneath all of these, the same loop is running."
+-->
 ---
 layout: default
 ---
@@ -361,6 +439,15 @@ sequenceDiagram
 - Everything else — context assembly, tool dispatch, error handling, memory — is the harness
 
 </v-clicks>
+<!--
+Show the universal pattern. Every harness, from Claude Code to q15, runs the same loop.
+
+Walk through the sequence diagram: user sends input, harness assembles prompt and sends to model, model responds with text and/or tool calls, harness executes tools or returns output, history is updated.
+
+[click] The differences are in what counts as a tool, how long the loop runs, and what gets remembered. The model never sees the loop — it sees one turn at a time. Everything else — context assembly, tool dispatch, error handling, memory — is the harness.
+
+Transition: "So how minimal can this loop actually be?"
+-->
 ---
 layout: default
 ---
@@ -392,6 +479,15 @@ We are in the "around and find out" phase of coding agents. Their current form i
 </div>
 
 </v-click>
+<!--
+[click] Terminus on Terminal Bench: two tools — send keystrokes to tmux, read output. No file tools, no sub-agents, no plan mode. It outperforms harnesses with dozens of tools. This is a striking result.
+
+[click] Mario Zechner's Pi: four tools — read, write, edit, bash. System prompt is a few lines. His argument: the models are already trained to be coding agents. You don't need 10,000 tokens to tell them what they are.
+
+[click] Land the meta-point: we're in the "around and find out" phase of coding agents. Their current form is not their final form. Don't over-invest in one approach.
+
+Transition: "Whatever tools you give the agent, it needs to be able to read the rules."
+-->
 ---
 layout: default
 ---
@@ -417,6 +513,18 @@ The loop only works if the model can read the repo, the tools, and the rules. Th
 </div>
 
 </v-click>
+<!--
+The loop only works if the model can read the repo, the tools, and the rules. That's legibility.
+
+[click] Walk through the three mechanisms:
+- Rules files (AGENTS.md, CLAUDE.md) — persistent, repo-scoped instructions injected at session start
+- Skills — reusable workflow packages with instructions, scripts, references
+- Structural tests — tests about the source code itself: file length limits, module boundary checks, dependency constraints
+
+[click] In q15, skills are first-class: markdown directories under /skills, version-controlled, portable. The agent reads them when relevant and follows the procedures.
+
+Transition: "Lopopolo's key insight ties all of this together: everything is a prompt."
+-->
 ---
 layout: two-cols
 layoutClass: gap-8
@@ -470,6 +578,15 @@ The error message itself becomes a prompt — the agent reads it and fixes the v
 </v-click>
 
 </div>
+<!--
+[click] Lopopolo's insight: every way you influence the agent is a prompt. System prompts, rules files, skills — and crucially, lint error messages and review comments.
+
+[click] Show the code example: a good lint error doesn't say "violation detected." It tells the agent what to do instead, references the rules, and explains why. The error message itself becomes a prompt — the agent reads it and fixes the violation without human intervention.
+
+[click] Practical tip: disable inline-disable rules. Otherwise agents suppress violations instead of fixing them. This is a real pattern — agents will happily add eslint-disable comments.
+
+Transition: "This leads to the most important habit: durable solutions to failure classes."
+-->
 ---
 layout: default
 ---
@@ -502,6 +619,19 @@ Each job can run on a different model than the interactive loop. The harness thi
 </div>
 
 </v-click>
+<!--
+The core engineering discipline: when an agent makes a mistake, don't just fix it. Engineer a solution so it never makes that mistake again.
+
+[click] Walk through the four steps:
+1. Observe — find the durable classes of failures, not one-off bugs
+2. Diagnose — figure out why the agent struggles in your environment
+3. Engineer — write a lint, a test, a skill, or a review agent that catches it
+4. Step back — move to higher-leverage work once the guardrail is in place
+
+[click] In q15, this is systematized as cognition jobs — background processes that run after every turn: verification review, working memory consolidation, semantic memory extraction. Each can run on a different model. The harness thinks about its own work while you're not looking.
+
+Transition: "But all of this runs inside a fixed context window. That's the hardest problem."
+-->
 ---
 layout: default
 ---
@@ -530,6 +660,20 @@ The hardest part of a harness isn't calling the model. It's <em>what to remember
 </div>
 
 </v-click>
+<!--
+[click] Every LLM has a fixed context window. When the conversation grows too long, something has to be dropped.
+
+The standard approach is compaction: when the transcript exceeds a threshold, the harness asks the model to summarize the older portion. The summary replaces the original messages.
+
+Walk through the three problems:
+- Lossy — you can't query what was lost. If the model omitted a detail, it's gone from the prompt.
+- Compounding drift — each cycle summarizes the previous summary. After three cycles, detail erodes.
+- Blocking — compaction happens during the user's turn. The model is asked to summarize before it can answer.
+
+[click] Land the takeaway: the hardest part of a harness isn't calling the model. It's what to remember, when to forget, and how to keep it consistent across sessions.
+
+Transition: "Here's how q15 approaches this differently."
+-->
 ---
 layout: default
 ---
@@ -561,6 +705,18 @@ flowchart TB
 - **One conversation. No sessions. No "new chat" button.** The agent picks up where you left off because its memory persists across the gap.
 
 </v-clicks>
+<!--
+q15 doesn't compress history. It maintains structured memory artifacts through background cognition jobs.
+
+Walk through the diagram: working memory (active state) ↔ long-term memory (facts, decisions) ↔ semantic memory (curated knowledge). Consolidation and extraction jobs move information between layers.
+
+[click] Key points:
+- The full transcript persists on disk. Nothing is deleted. Only recent unconsolidated turns replay into the prompt.
+- Working memory = what the harness knows. Cognition = what it does with it.
+- One conversation. No sessions. No "new chat" button. The agent picks up where you left off because memory persists across the gap.
+
+Transition: "Before we wrap up, there's one more piece — the one that started this whole project."
+-->
 ---
 layout: two-cols
 layoutClass: gap-8
@@ -605,6 +761,20 @@ This removes the easiest exfiltration path. It doesn't eliminate every attack ve
 </v-click>
 
 </div>
+<!--
+[click] Remember the proxy idea from the origin story? That became q15's architecture.
+
+The problem: most AI agent platforms run everything in one process — model, tools, credentials, network all share a trust domain. If the model is compromised via prompt injection, the attacker has everything.
+
+[click] q15 splits into three services with hard boundaries:
+- q15-agent — prompt assembly, tool wiring, memory, file operations. Never sees credentials.
+- q15-exec — command execution through Nix. The egress boundary. All outbound traffic routes through the proxy.
+- q15-proxy — credential injection at the network layer. The only service with secrets.
+
+[click] The key insight: the agent cannot ask exec to bypass the proxy. Routing is configured at deployment level. A compromised prompt cannot exfiltrate secrets the agent never had. This turns prompt injection from "game over" into a contained problem. It doesn't eliminate every attack vector, but it removes the easiest exfiltration path.
+
+Transition: "Another harness concern: which model do you actually call?"
+-->
 ---
 layout: default
 ---
@@ -630,6 +800,18 @@ The model API is the smallest piece. Everything else — provider abstraction, c
 </div>
 
 </v-click>
+<!--
+[click] The harness decides which model to call — not the user, not the model.
+
+Walk through the three layers:
+- Capability inference — the harness inspects the request: tools? reasoning? vision? It filters models by what they can actually do.
+- Fallback ordering — remaining models tried in configured order. Cheap first for cost, capable first for quality, local first to avoid cloud.
+- Cognition model selection — background jobs use a separate model list. Verification on a careful model, consolidation on a fast one.
+
+[click] The model API is the smallest piece. Everything else — provider abstraction, capability matching, fallback, error recovery — is the harness. A harness that abstracts over providers is doing real work. It can't just be a 10-line wrapper.
+
+Transition: "And all of this stacks."
+-->
 ---
 layout: default
 ---
@@ -656,6 +838,19 @@ Build the guardrail once. It works forever.
 </div>
 
 </v-click>
+<!--
+[click] The leverage you encode into your harness stacks. Each guardrail pays forward to every future agent run.
+
+Walk through the examples:
+- One engineer documents a QA plan → every agent trajectory gets a good QA plan
+- A review agent asserts expectations → trust increases → you shoulder-surf less
+- A lint with remediation messages → the agent self-corrects without human input
+- A skill captures a workflow → the next agent run starts from the skill, not from zero
+
+[click] The one-liner: build the guardrail once, it works forever. This is the compounding return on harness engineering.
+
+Transition: "There's one more architectural question that separates the toys from the products."
+-->
 ---
 layout: default
 ---
@@ -689,6 +884,17 @@ The model is the easy part. The harness is the actual product.
 </div>
 
 </v-click>
+<!--
+[click] The question: who holds the state across runs?
+
+In a CLI harness, the user holds the state. You remember what happened, you open the right chat, you manage the context. This works for individual workflows.
+
+[click] In a long-running agent runtime, the harness holds the state across users. It remembers, manages context, figures out what to keep and what to forget. That's why memory and cognition matter — the agent has to figure out what to remember on its own.
+
+[click] Without structured memory and background cognition, the agent starts from zero every time. The model is the easy part. The harness is the actual product.
+
+Transition: "Before you go build all of this — Mario has a warning."
+-->
 ---
 layout: default
 ---
@@ -714,6 +920,18 @@ Think about what you're building and why. Learn to say no. Fewer features, but t
 </div>
 
 </v-click>
+<!--
+[click] This is the counterpoint to all the leverage talk. Mario Zechner's warning: agents compound errors — he calls them "booboos" — with zero learning, no bottlenecks, and delayed pain. The pain is for you.
+
+Walk through the three hard truths:
+- A sufficiently detailed spec is a program. If you leave blanks, the model fills them with garbage it learned from the internet. 90% of code on the internet is old garbage.
+- Agent-written tests are not trustworthy. You cannot trust your codebase if you haven't read the code.
+- When something breaks and your users are screaming, who are you going to call? Not yourself — you haven't read the code.
+
+[click] The closing message: think about what you're building and why. Learn to say no. Fewer features, but the ones that matter. Cap the amount of generated code you need to review. Critical code: read every line. The friction is where you build understanding in your head — and it's where you learn new things.
+
+Transition: "That's the talk. Thanks."
+-->
 ---
 layout: center
 class: text-center
@@ -748,3 +966,11 @@ Talk outline based on Ryan Lopopolo's "Harness Engineering" (OpenAI) · [openai.
 Additional ideas from Mario Zechner's "Building Pi in a World of Slop" · [youtube.com/watch?v=RjfbvDXpFls](https://www.youtube.com/watch?v=RjfbvDXpFls)
 
 </div>
+
+<!--
+Thank the audience. Invite questions. Mention the repo and that q15 is open-source.
+
+Keep this warm and brief — don't rush off. Let people know you're happy to dig into any of the topics in detail.
+
+If someone asks about attribution: the talk outline is based on Ryan Lopopolo's "Harness Engineering" talk at OpenAI, with additional ideas from Mario Zechner's "Building Pi in a World of Slop."
+-->
