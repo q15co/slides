@@ -4,8 +4,8 @@ title: Introduction to Harness Engineering
 info: |
   ## Introduction to Harness Engineering
 
-  A one-on-one talk about model harnesses — what they are, why they matter,
-  and what building one (q15) taught me about the rest of the ecosystem.
+  What a model harness is, why it matters, and what building q15 taught me
+  about the rest of the ecosystem.
 
   Built with Slidev. See https://sli.dev for documentation.
 class: text-center
@@ -26,13 +26,11 @@ fonts:
     --slidev-font-family-default: 'Recursive', sans-serif;
     --slidev-font-family-mono: 'Recursive', monospace;
     --slidev-code-font-family: 'Recursive', monospace;
-    /* Exercise Recursive axes: set MONO to 1 for code, default casual for body */
     --recursive-mono: 1;
     --recursive-casl: 0;
     --recursive-slnt: 0;
   }
 
-  /* Apply Recursive variable axes */
   .slidev-layout,
   body {
     font-family: 'Recursive', sans-serif;
@@ -55,8 +53,6 @@ fonts:
       "wght" 450 !important;
   }
 
-  /* Subtle animation on the title slide: animate Recursive CASL axis to slide
-     between Casual (0) and Casual (1), creating a breathing effect */
   @keyframes recursive-breath {
     0%, 100% { font-variation-settings: "CASL" 0, "MONO" 0, "slnt" 0, "wght" 850; }
     50%      { font-variation-settings: "CASL" 1, "MONO" 0, "slnt" 0, "wght" 850; }
@@ -69,7 +65,6 @@ fonts:
     letter-spacing: -0.02em;
   }
 
-  /* Hover-triggered axis animation on Mermaid diagrams */
   svg .node rect,
   svg .node polygon,
   svg .node ellipse {
@@ -81,8 +76,6 @@ fonts:
     filter: brightness(1.15) saturate(1.3);
   }
 
-  /* Mermaid contrast fix: force light-text on the dark surface fills
-     we just chose, regardless of what Slidev's runtime computes. */
   svg .node text,
   svg .node .label,
   svg .node.default text,
@@ -105,8 +98,6 @@ fonts:
     fill: #cad6f5 !important;
   }
 
-  /* Lift sequence diagrams so the bottom loop ("update history")
-     doesn't clip. Mermaid scale attribute handles sizing. */
   svg.sequenceDiagram,
   svg[id*="sequence"] {
     margin-top: -1rem;
@@ -116,7 +107,6 @@ fonts:
 <script setup>
 import { onMounted } from 'vue'
 onMounted(() => {
-  // Load Recursive variable font from Google Fonts with all axes
   if (!document.querySelector('link[href*="Recursive"]')) {
     const l = document.createElement('link')
     l.rel = 'stylesheet'
@@ -128,7 +118,7 @@ onMounted(() => {
 
 # <span class="title-breath">Introduction to Harness Engineering</span>
 
-A tour through the model harness layer, told through what I learned building q15
+What a model harness is, why it matters, and what building q15 taught me about the rest of the ecosystem.
 
 <div class="pt-12">
   <span class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
@@ -141,8 +131,6 @@ A tour through the model harness layer, told through what I learned building q15
 </div>
 
 <style>
-  /* Cover (slide 1) — title is long, so reduce h1 size a touch so
-     it wraps cleanly inside the slide canvas */
   .slidev-page-1 h1 .title-breath {
     font-size: 52px;
     line-height: 1.05;
@@ -153,27 +141,21 @@ A tour through the model harness layer, told through what I learned building q15
 layout: default
 ---
 
-# The progression
+# Code is free
 
-We keep wrapping more around the model. Each stage doesn't replace the last — it *contains* it.
+In late 2025, coding agents crossed a threshold. The models can now do the full job of a software engineer — read codebases, write features, run tests, ship patches.
 
 <v-clicks>
 
 <div class="p-4 bg-blue-500 bg-opacity-10 rounded-lg mt-4">
 
-**Prompt engineering** — craft the perfect input text. The model is a text-in / text-out box. You optimize the prompt. The model does nothing on its own.
+**Implementation is no longer the scarce resource.** Code is free to produce, free to refactor, free to delete. The models are highly parallel and incredibly patient.
 
 </div>
 
 <div class="p-4 bg-green-500 bg-opacity-10 rounded-lg mt-4">
 
-**Context engineering** — realize the model needs context. System prompts, few-shot examples, retrieved documents, conversation history. You engineer what goes *into* the context window.
-
-</div>
-
-<div class="p-4 bg-purple-500 bg-opacity-10 rounded-lg mt-4">
-
-**Harness engineering** — realize the model needs *agency*. Tools, loops, memory, error handling, model selection. You engineer the entire system *around* the model.
+**Every engineer is now a staff engineer.** You have as many team members as you can drive concurrently. Your job is to figure out how to deploy that capacity productively.
 
 </div>
 
@@ -183,7 +165,17 @@ We keep wrapping more around the model. Each stage doesn't replace the last — 
 
 <div class="mt-6 text-center text-lg opacity-80">
 
-Harness engineering is prompt engineering + context engineering + everything else that makes the model able to <em>do things</em>.
+The question is no longer "can the model do it?" — it's "what do I wrap around the model so it does it <em>reliably</em>?"
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-4 text-center text-sm opacity-60">
+
+I'll use q15 — the open-source agent runtime I built in Go — as a running example. But the ideas apply to any harness.
 
 </div>
 
@@ -192,110 +184,67 @@ Harness engineering is prompt engineering + context engineering + everything els
 layout: default
 ---
 
-# Brain in a jar
+# The three scarce resources
 
-<div class="grid grid-cols-2 gap-8 items-center mt-4">
-
-<div>
-
-The model is a brain in a jar. Smart, but inert. It can think, but it can't *act*.
+Code is abundant. Three things are not:
 
 <v-clicks>
 
-A **harness** gives the brain:
+- **Human time** — your attention is the most expensive thing in the system. Every minute you spend shoulder-surfing the agent is a minute not spent on higher-leverage work.
 
-- **Hands** — tools, file system, shell, HTTP
-- **Eyes** — context, memory, observation
-- **A loop** — keep going until done
-- **Agency** — the ability to act in the world
+- **Human and model attention** — the model can only hold so much context at once. Making things the same across the codebase reduces the attention the model needs to activate per task.
 
-That's what makes it an **agent** — the model + harness together. The equation is simple: Agent = Model + Harness.
-
-The word **harness** comes from *test harness* — the scaffolding around code that makes it runnable and repeatable.
+- **Model context window** — a fixed, finite buffer. If the conversation grows too long, something has to be dropped. How you handle this is the hardest problem in harness engineering.
 
 </v-clicks>
 
+<v-click>
+
+<div class="mt-6 p-4 bg-purple-500 bg-opacity-10 rounded-lg text-sm">
+
+Your role shifts from <em>writing code</em> to <em>building systems that enable agents to write code</em>: structures, guardrails, feedback loops, and memory that make the agent reliable without you watching.
+
 </div>
 
-<div class="flex flex-col items-center">
+</v-click>
+---
+layout: default
+---
 
-<img src="/images/brain-in-dome.png" alt="A vintage 80s cartoon villain action figure: a mean pink brain in the open chest of a chunky blue robot" class="rounded-lg shadow-2xl" style="max-height: 420px; width: auto;" />
+# What is a model harness?
 
-<div class="text-xs opacity-60 mt-3 text-center">
+The idea was articulated by Mitchell Hashimoto and formalized by Ryan Lopopolo at OpenAI in early 2026.
+
+<v-clicks>
+
+A model API gives you text-in / text-out. That's it. No tools, no memory, no loop, no error handling.
+
+A **harness** is everything you wrap around that API to make it actually *do things*: system prompts, tools, the agent loop, model selection, output parsing, error recovery, history management.
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-4 text-center text-2xl font-bold">
+
+Agent = Model + Harness
+
+</div>
+
+<div class="mt-2 text-center text-sm opacity-70">
 
 The model is the brain. The harness is the body. Without the body, the brain just thinks.
 
 </div>
 
-</div>
-
-</div>
----
-layout: default
----
-
-# Why this talk
-
-I started building **q15** — an open-source AI agent runtime in Go — partly because I wanted to understand what an AI agent actually *is* at the substrate level.
-
-What I kept running into: every project, every demo, every blog post used the word **harness**. Claude Code was a harness. Cline was a harness. OpenClaw was a harness. And q15, it turned out, was a harness too.
-
-<v-clicks>
-
-- The term is everywhere and rarely defined
-- Building one forces you to learn what every other one does
-- The pattern is universal — even long-running agents are harnesses
-- Once you see the layer, you stop reinventing it badly
-
-</v-clicks>
----
-layout: two-cols
-layoutClass: gap-8
----
-
-# What is a model harness?
-
-A model API gives you text-in / text-out. That's it. No tools, no memory, no loop, no error handling, no idea what "done" means.
-
-A **harness** is the code you wrap around that API to make it actually *do things*.
-
-It's the system prompt, the tool surface, the message loop, the model selection, the output parser, the error recovery, the history management. The model is the brain. The harness is the body.
-
-::right::
-
-```mermaid {scale: 0.7}
-flowchart TB
-    subgraph Harness
-        SP[System Prompt]
-        CTX[Context Assembly]
-        LOOP[Agent Loop]
-        TOOLS[Tool Surface]
-        MEM[Memory]
-        SEL[Model Selector]
-        PARSE[Output Parser]
-    end
-
-    M[Model API]
-
-    SP --> LOOP
-    CTX --> LOOP
-    SEL --> LOOP
-    LOOP <--> M
-    LOOP --> PARSE
-    PARSE --> TOOLS
-    TOOLS --> MEM
-    MEM --> CTX
-
-    classDef ext fill:#fef3c7,stroke:#d97706
-    class M ext
-```
+</v-click>
 ---
 layout: default
 ---
 
 # The harness spectrum
 
-Same primitives, different opinion. Each category makes different trade-offs about **who** runs it, **where** it runs, and **how much** it can do on its own.
+Same primitives, different opinions about **who** runs it, **where** it runs, and **how much** it can do on its own.
 
 ```mermaid {scale: 0.55}
 flowchart LR
@@ -319,7 +268,7 @@ flowchart LR
 
 <v-click>
 
-<div class="mt-6 text-sm opacity-80">
+<div class="mt-4 text-sm opacity-80">
 
 The arrow is **not** "better than." It's "more autonomous, more infrastructure, more moving parts." A CLI assistant is the right answer for most developer workflows. A custom runtime is the right answer when you're shipping a product.
 
@@ -330,9 +279,9 @@ The arrow is **not** "better than." It's "more autonomous, more infrastructure, 
 layout: default
 ---
 
-# What a harness actually does
+# The agent loop — same shape everywhere
 
-The agent loop — same shape everywhere:
+Every harness, from Claude Code to q15, runs the same loop:
 
 ```mermaid {scale: 0.42}
 sequenceDiagram
@@ -355,227 +304,162 @@ sequenceDiagram
 
 <v-clicks>
 
-- **Same shape** across every harness — differences are in **what counts as a tool**, **how long the loop runs**, **what gets remembered**
+- The differences are in **what counts as a tool**, **how long the loop runs**, **what gets remembered**
 - The model never sees the loop — it sees one turn at a time
+- Everything else — context assembly, tool dispatch, error handling, memory — is the harness
 
 </v-clicks>
 ---
-layout: two-cols
+layout: default
 ---
 
-# CLI assistants
+# Making things legible to agents
 
-**Claude Code, Codex CLI**
-
-Terminal-first. Single binary. Optimised for the developer who lives in a shell.
+The loop only works if the model can read the repo, the tools, and the rules. That's **legibility**.
 
 <v-clicks>
 
-- Heavy on opinionated UX (slash commands, file diffs, headless mode)
-- Read-only by default; tool calls are explicit
-- "Senior engineer with a terminal" mental model
-- Best for: writing code, refactors, exploring codebases
-- Worst for: long-running autonomous work
+- **Rules files** (AGENTS.md, CLAUDE.md) — persistent, repo-scoped instructions injected into the agent's context at session start
+- **Skills** — reusable workflow packages with instructions, scripts, and references
+- **Structural tests** — tests *about* the source code: file length limits, module boundary checks, dependency constraints
 
 </v-clicks>
+
+<v-click>
+
+<div class="mt-6 p-4 bg-blue-500 bg-opacity-10 rounded-lg text-sm">
+
+**In q15**, skills are first-class: markdown-defined directories under <code>/skills</code>, version-controlled, portable across deployments. The agent reads them when relevant and follows the procedures. Built-in skills ship with the runtime; shared skills persist on your infrastructure.
+
+</div>
+
+</v-click>
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+# Everything is a prompt
+
+Ryan Lopopolo's key insight: every way you influence the agent is a prompt.
+
+<v-clicks>
+
+- System prompts are prompts
+- Rules files (AGENTS.md) are prompts
+- Skills are prompts
+- **Lint error messages are prompts**
+- Review agent comments are prompts
+
+</v-clicks>
+
+<v-click>
+
+A good lint error doesn't say "violation detected." It says:
+
+</v-click>
 
 ::right::
 
 <div class="ml-8 mt-12">
 
-```bash {*|2|3|4|5|6}{lines:true}
-$ claude "refactor this file to use the
-    new error handling pattern"
-
-Reading 4 files...
-I'll make these changes:
-  src/auth.ts (rewrite)
-  src/auth.test.ts (update)
-  src/middleware.ts (touch)
-
-Apply? [y/n/r] y
-✓ Applied
-```
-
-</div>
----
-layout: two-cols
----
-
-# Editor integrations
-
-**Cline, Continue, Roo Code**
-
-Editor-first. Sidebar UI, diff visualisation, model picker.
-
-<v-clicks>
-
-- See what the model is doing, in real time, in the IDE
-- Diffs are the primary UI primitive
-- Often a thin shell over an OpenAI-compatible API
-- Best for: pair-programming style workflows
-- Worst for: anything outside the editor
-
-</v-clicks>
-
-::right::
-
-<div class="ml-8 mt-12">
-
-```
-┌─ Cline ──────────────────┐
-│                          │
-│ Add error handling to    │
-│ the auth middleware.     │
-│                          │
-│ ✓ Read auth.ts           │
-│ ✓ Read auth.test.ts      │
-│ → Patch auth.ts          │
-│   + if (!token) {        │
-│     throw new Error(...) │
-│   }                      │
-│                          │
-│ [Apply] [Reject] [Skip]  │
-└──────────────────────────┘
-```
-
-</div>
----
-layout: default
----
-
-# Agent runtimes
-
-**OpenClaw, Hermes Agent, q15**
-
-Headless. Designed to run as services or embedded in products. Less about "watch the agent work," more about "give the agent work."
-
-<v-clicks>
-
-- API-driven, not UI-driven
-- Multi-agent by default (planner, executor, critic)
-- Memory is a first-class concept
-- Configuration > conversation: YAML, code, or both
-- Best for: production products, autonomous workflows
-- Worst for: ad-hoc dev work where you want to steer in real time
-
-</v-clicks>
-
-<div v-click class="mt-6 grid grid-cols-3 gap-4 text-sm">
-  <div class="p-3 bg-blue-500 bg-opacity-10 rounded">
-    <div class="font-bold">OpenClaw</div>
-    <div class="opacity-70">Distributed agent platform · opinionated about deployment</div>
-  </div>
-  <div class="p-3 bg-pink-500 bg-opacity-10 rounded">
-    <div class="font-bold">Hermes Agent</div>
-    <div class="opacity-70">Lightweight runtime · focuses on tool semantics</div>
-  </div>
-  <div class="p-3 bg-purple-500 bg-opacity-10 rounded">
-    <div class="font-bold">q15</div>
-    <div class="opacity-70">Portable agent runtime · Go · memory + cognition as primitives</div>
-  </div>
-</div>
----
-layout: default
----
-
-# What building q15 taught me
-
-The story in one slide:
-
-```mermaid {scale: 0.45}
-flowchart LR
-    P[Model Providers<br/>OpenAI · Anthropic · Ollama] --> L[Loop]
-    T[Tools<br/>fs · shell · web · custom] --> L
-    MEM[Memory<br/>working · long-term · semantic] --> L
-    COG[Cognition<br/>background jobs] --> L
-    SEL[Selector<br/>tagged refs] --> L
-
-    L --> OUT[Output<br/>text · tool · event]
-
-    classDef ext fill:#303446,stroke:#f9e2af,color:#cad6f5
-    classDef q15 fill:#303446,stroke:#89b4fa,color:#cad6f5
-    class P,T,MEM,COG,SEL,L,OUT q15
-```
-
-<v-clicks>
-
-- The model API is the smallest piece. Everything else *is* the harness.
-- Memory makes a runtime interesting. Cognition makes it *durable*.
-- Provider abstraction means you stop caring which model is on the other end
-
-</v-clicks>
----
-layout: default
----
-
-# Long-running orchestration agents
-
-Same primitives. Different lifecycle.
-
-<v-clicks>
-
-- The harness becomes a **daemon**: runs as a service, holds state across requests
-- Memory crosses session boundaries — that's the whole point
-- Cognition runs in the background: compaction, extraction, consolidation
-- Multiple loops can share providers, memory, tools
-- "Did this ever happen?" stops being a question you can only answer with logs
-
-</v-clicks>
-
-<div v-click class="mt-8 p-4 bg-purple-500 bg-opacity-10 rounded-lg text-sm">
-
-**Mental shift**: in a CLI harness, the *user* holds the state across runs. In a long-running orchestration agent, the *harness* holds the state across users. That's why cognition matters — the agent has to figure out what to remember on its own.
-
-</div>
----
-layout: default
----
-
-# Model providers — the OpenAI-compat layer
-
-Most providers now speak a version of OpenAI's chat completions API.
-
-```typescript {*|2,3|5,6|8,9|11}{lines:true}
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-const anthropic = new OpenAI({
-  baseURL: 'https://api.anthropic.com/v1',  // same client
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
-const ollama = new OpenAI({
-  baseURL: 'http://localhost:11434/v1',     // local model
-  apiKey: 'ollama',
-})
-const deepseek = new OpenAI({
-  baseURL: 'https://api.deepseek.com/v1',
-  apiKey: process.env.DEEPSEEK_API_KEY,
-})
+```typescript
+// Lint error: use logger.info({event: 'name', ...data})
+// instead of console.log. See AGENTS.md §logging.
+// Do not use console.log in production code.
+console.log("user logged in")
 ```
 
 <v-click>
 
-The harness doesn't care which provider. Same `client.chat.completions.create(...)` call. Same response shape. Same tool-calling convention (mostly).
+<div class="mt-6 text-sm opacity-80">
+
+The error message itself becomes a prompt — the agent reads it and fixes the violation without human intervention.
+
+</div>
+
+<div class="mt-4 text-sm opacity-80">
+
+**Disable inline-disable rules** (<code>// eslint-disable-next-line</code>) — otherwise agents suppress violations instead of fixing them.
+
+</div>
 
 </v-click>
-
-<div v-click class="mt-6 text-sm opacity-80">
-
-**The catch**: tool calling, system prompts, and structured output vary subtly between providers. The harness that abstracts over them is doing real work — it can't just be a 10-line wrapper.
 
 </div>
 ---
 layout: default
 ---
 
-# Memory + cognition — single source of truth
+# Durable solutions to failure classes
 
-The hardest part of a harness isn't calling the model. It's **what to remember, when to forget, and how to keep it consistent across sessions.**
+When an agent makes a mistake, engineer a solution so it never makes that mistake again.
+
+<v-clicks>
+
+1. **Observe** — find the durable classes of failures, not the one-off bugs
+2. **Diagnose** — figure out why the agent is struggling in your environment
+3. **Engineer** — write a lint, a test, a skill, or a review agent that catches it
+4. **Step back** — move to higher-leverage work once the guardrail is in place
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 p-4 bg-purple-500 bg-opacity-10 rounded-lg text-sm">
+
+**In q15**, this is systematized as <strong>cognition jobs</strong> — background processes that run after every turn:
+
+- **Verification review** — a separate model checks the agent's work against evidence. Verdict: pass, fail, or partial.
+- **Working memory consolidation** — compacts active state, removes stale entries, preserves open threads.
+- **Semantic memory extraction** — pulls durable facts, preferences, and project knowledge into structured files.
+
+Each job can run on a different model than the interactive loop. The harness thinks about its own work while you're not looking.
+
+</div>
+
+</v-click>
+---
+layout: default
+---
+
+# The context window problem
+
+Every LLM has a fixed context window. When the conversation grows too long, something has to be dropped.
+
+<v-clicks>
+
+The standard approach is **compaction**: when the transcript exceeds a threshold, the harness asks the model to summarize the older portion. The summary replaces the original messages.
+
+Problems:
+- **Lossy** — you cannot query what was lost. If the model omitted a detail, it's gone from the prompt.
+- **Compounding drift** — each cycle summarizes the previous summary. After three cycles, detail erodes.
+- **Blocking** — compaction happens during the user's turn. The model is asked to summarize *before* it can answer.
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-4 text-center text-lg opacity-80">
+
+The hardest part of a harness isn't calling the model. It's <em>what to remember, when to forget, and how to keep it consistent across sessions.</em>
+
+</div>
+
+</v-click>
+---
+layout: default
+---
+
+# Memory as architecture — q15's approach
+
+q15 doesn't compress history. It maintains **structured memory artifacts** through background cognition jobs.
 
 ```mermaid {scale: 0.45}
 flowchart TB
-    SHORT[Working Memory<br/>current context] <--> LONG[Long-term Memory<br/>user facts, decisions]
+    SHORT[Working Memory<br/>active state, open threads] <--> LONG[Long-term Memory<br/>user facts, decisions]
     LONG <--> SEM[Semantic Memory<br/>curated knowledge]
-    SHORT --> COMP[Compaction]
+    SHORT --> COMP[Consolidation]
     COMP --> LONG
     LONG --> EXTRACT[Extraction]
     EXTRACT --> SEM
@@ -589,16 +473,137 @@ flowchart TB
 
 <v-clicks>
 
-- **Memory** is what the harness knows. **Cognition** is what it does with it.
-- Together they make session N+1 not start from zero
+- The full transcript persists on disk. Nothing is deleted. Only the recent **unconsolidated** turns replay into the prompt.
+- **Working memory** = what the harness knows. **Cognition** = what it does with it.
+- **One conversation. No sessions. No "new chat" button.** The agent picks up where you left off because its memory persists across the gap.
+
+</v-clicks>
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+# Security as harness engineering
+
+Most AI agent platforms run everything in one process: the model, the tools, the credentials, and the network all share a trust domain.
+
+If the model is compromised via prompt injection, the attacker has everything.
+
+<v-click>
+
+q15 splits the harness into three services with hard boundaries:
+
+</v-click>
+
+::right::
+
+<div class="ml-8 mt-4">
+
+<v-clicks>
+
+- **`q15-agent`** — prompt assembly, tool wiring, memory, file operations. **Never sees credentials.**
+- **`q15-exec`** — command execution through Nix. **The egress boundary.** All outbound traffic routes through the proxy.
+- **`q15-proxy`** — credential injection at the network layer. **The only service with secrets.**
 
 </v-clicks>
 
-<div v-click class="mt-4 p-4 bg-blue-500 bg-opacity-10 rounded-lg text-sm">
+<v-click>
 
-**Mental model**: memory is the database. Cognition is the daemon that runs `cron` on it.
+<div class="mt-6 p-4 bg-red-500 bg-opacity-10 rounded-lg text-sm">
+
+The agent cannot ask exec to bypass the proxy. The routing is configured at the deployment level. A compromised prompt cannot exfiltrate secrets the agent never had.
+
+This removes the easiest exfiltration path. It doesn't eliminate every attack vector — but it turns prompt injection from "game over" into a contained problem.
 
 </div>
+
+</v-click>
+
+</div>
+---
+layout: default
+---
+
+# Model selection is a harness concern
+
+The harness decides which model to call — not the user, not the model.
+
+<v-clicks>
+
+- **Capability inference** — the harness inspects the request: does it need tools? reasoning? vision? It filters models by what they can actually do.
+- **Fallback ordering** — remaining models are tried in configured order. Cheap models first to minimize cost. Capable models first for best quality. Local models first to avoid cloud calls.
+- **Cognition model selection** — background jobs use a separate model list. Verification on a careful model, consolidation on a fast one.
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 text-sm opacity-80">
+
+The model API is the smallest piece. Everything else — provider abstraction, capability matching, fallback, error recovery — <em>is the harness.</em> A harness that abstracts over providers is doing real work. It can't just be a 10-line wrapper.
+
+</div>
+
+</v-click>
+---
+layout: default
+---
+
+# Stacking leverage
+
+The leverage you encode into your harness stacks. Each guardrail you build pays forward to every future agent run.
+
+<v-clicks>
+
+- One engineer documents a QA plan → every agent trajectory gets a good QA plan
+- A review agent asserts expectations → trust increases → you shoulder-surf less
+- A lint with remediation messages → the agent self-corrects without human input
+- A skill captures a workflow → the next agent run starts from the skill, not from zero
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 text-center text-lg opacity-80">
+
+Build the guardrail once. It works forever.
+
+</div>
+
+</v-click>
+---
+layout: default
+---
+
+# Who holds the state?
+
+<v-clicks>
+
+- In a CLI harness, the **user** holds the state across runs. You remember what happened. You open the right chat. You manage the context.
+
+- In a long-running agent runtime, the **harness** holds the state across users. It remembers. It manages context. It figures out what to keep and what to forget.
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 p-4 bg-blue-500 bg-opacity-10 rounded-lg">
+
+That's why memory and cognition matter — the agent has to figure out what to remember **on its own**. Without structured memory and background cognition, the agent starts from zero every time.
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-6 text-center text-xl opacity-80">
+
+The model is the easy part. The harness is the actual product.
+
+</div>
+
+</v-click>
 ---
 layout: default
 ---
@@ -619,7 +624,7 @@ A pragmatic answer for whoever's listening:
 
 <div v-click class="mt-8 text-center text-2xl opacity-80">
 
-**The thing to remember**: the model is the easy part. The harness is the actual product.
+When an agent makes a mistake, don't fix the mistake. Engineer a solution so it never makes that mistake again.
 
 </div>
 ---
@@ -651,5 +656,7 @@ Happy to dig into any of this in detail. Bring questions.
 <div class="mt-12 text-xs opacity-50">
 
 Built with [Slidev](https://sli.dev) · images via fal.ai · video via HyperFrames
+
+Talk outline based on Ryan Lopopolo's "Harness Engineering" (OpenAI, 2026) · [openai.com/index/harness-engineering](https://openai.com/index/harness-engineering)
 
 </div>
