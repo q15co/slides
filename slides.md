@@ -280,6 +280,16 @@ You have models that can write code. You have a clear idea of what your agent sh
 </div>
 
 </v-click>
+
+<v-click>
+
+<div class="mt-4 p-4 bg-green-500 bg-opacity-10 rounded-lg text-sm">
+
+Mario Zechner, who built Pi (the agent core that OpenClaw runs on), puts it bluntly: <em>"My context wasn't my context."</em> When you use someone else's harness, they control your context — system prompts change on every release, tools get removed, system reminders get injected behind your back.
+
+</div>
+
+</v-click>
 ---
 layout: default
 ---
@@ -351,6 +361,37 @@ sequenceDiagram
 - Everything else — context assembly, tool dispatch, error handling, memory — is the harness
 
 </v-clicks>
+---
+layout: default
+---
+
+# How minimal can a harness be?
+
+<v-clicks>
+
+On Terminal Bench, one of the best-performing harnesses is **Terminus** — it gives the model just two tools: send keystrokes to a tmux session, and read the output. No file tools, no sub-agents, no plan mode. It outperforms harnesses with dozens of tools.
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 p-4 bg-green-500 bg-opacity-10 rounded-lg text-sm">
+
+Mario Zechner's Pi ships with **four tools**: read, write, edit, bash. The system prompt is a few lines. His argument: the models are already trained to be coding agents — you don't need 10,000 tokens to tell them what they are.
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-4 text-center text-lg opacity-80">
+
+We are in the "around and find out" phase of coding agents. Their current form is not their final form.
+
+</div>
+
+</v-click>
 ---
 layout: default
 ---
@@ -652,25 +693,27 @@ The model is the easy part. The harness is the actual product.
 layout: default
 ---
 
-# What I'd recommend
-
-A pragmatic answer for whoever's listening:
+# Slow the fuck down
 
 <v-clicks>
 
-- **For personal dev work** → Claude Code or Codex CLI. Don't over-think it.
-- **For pair-programming in the IDE** → Cline or Continue. The diff-first UX is genuinely good.
-- **For understanding** → build a 50-line harness yourself. One model, one tool, one loop. Everything else becomes obvious.
-- **For shipping a product** → build your own harness. You have models to help you write it. Add only the features you need. The codebase stays small, and you understand every line.
-- **For long-running agents** → make sure your harness treats memory + cognition as first-class. Otherwise you'll bolt it on later and it will be messy.
+Agents compound errors — Mario Zechner calls them **booboos** — with zero learning, no bottlenecks, and delayed pain. The pain is for you.
+
+- A sufficiently detailed spec is a program. If you leave blanks, the model fills them with garbage it learned from the internet. 90% of code on the internet is old garbage.
+- Agent-written tests are not trustworthy. You cannot trust your codebase if you haven't read the code.
+- When something breaks and your users are screaming, who are you going to call? Not yourself — you haven't read the code.
 
 </v-clicks>
 
-<div v-click class="mt-8 text-center text-2xl opacity-80">
+<v-click>
 
-When an agent makes a mistake, don't fix the mistake. Engineer a solution so it never makes that mistake again.
+<div class="mt-6 p-4 bg-red-500 bg-opacity-10 rounded-lg text-sm">
+
+Think about what you're building and why. Learn to say no. Fewer features, but the ones that matter. Cap the amount of generated code you need to review. **Critical code: read every line.** The friction is where you build the understanding of the system in your head — and it's where you learn new things.
 
 </div>
+
+</v-click>
 ---
 layout: center
 class: text-center
@@ -701,6 +744,7 @@ Happy to dig into any of this in detail. Bring questions.
 
 Built with [Slidev](https://sli.dev) · images via fal.ai · video via HyperFrames
 
-Talk outline based on Ryan Lopopolo's "Harness Engineering" (OpenAI, 2026) · [openai.com/index/harness-engineering](https://openai.com/index/harness-engineering)
+Talk outline based on Ryan Lopopolo's "Harness Engineering" (OpenAI) · [openai.com/index/harness-engineering](https://openai.com/index/harness-engineering)
+Additional ideas from Mario Zechner's "Building Pi in a World of Slop" · [youtube.com/watch?v=RjfbvDXpFls](https://www.youtube.com/watch?v=RjfbvDXpFls)
 
 </div>
