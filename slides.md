@@ -155,13 +155,92 @@ A tour through the model harness layer, told through what I learned building q15
 layout: default
 ---
 
+# The progression
+
+We keep wrapping more around the model. Each stage doesn't replace the last — it *contains* it.
+
+<v-clicks>
+
+<div class="p-4 bg-blue-500 bg-opacity-10 rounded-lg mt-4">
+
+**Prompt engineering** — craft the perfect input text. The model is a text-in / text-out box. You optimize the prompt. The model does nothing on its own.
+
+</div>
+
+<div class="p-4 bg-green-500 bg-opacity-10 rounded-lg mt-4">
+
+**Context engineering** — realize the model needs context. System prompts, few-shot examples, retrieved documents, conversation history. You engineer what goes *into* the context window.
+
+</div>
+
+<div class="p-4 bg-purple-500 bg-opacity-10 rounded-lg mt-4">
+
+**Harness engineering** — realize the model needs *agency*. Tools, loops, memory, error handling, model selection. You engineer the entire system *around* the model.
+
+</div>
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 text-center text-lg opacity-80">
+
+Harness engineering is prompt engineering + context engineering + everything else that makes the model able to <em>do things</em>.
+
+</div>
+
+</v-click>
+---
+layout: default
+---
+
+# Brain in a jar
+
+<div class="grid grid-cols-2 gap-8 items-center mt-4">
+
+<div>
+
+The model is a brain in a jar. Smart, but inert. It can think, but it can't *act*.
+
+<v-clicks>
+
+A **harness** gives the brain:
+
+- **Hands** — tools, file system, shell, HTTP, custom actions
+- **Eyes** — context, memory, observation of results
+- **A loop** — keep going until the task is done
+- **Agency** — the ability to act in the world
+
+That's where the word **agent** comes from. The model isn't the agent. The model + harness is the agent.
+
+The word **harness** comes from *test harness* — the scaffolding around code that makes it runnable, observable, and repeatable. Same idea here.
+
+</v-clicks>
+
+</div>
+
+<div class="flex flex-col items-center">
+
+<img src="/images/brain-in-dome.png" alt="A vintage 80s cartoon villain action figure: a mean pink brain in the open chest of a chunky blue robot" class="rounded-lg shadow-2xl" style="max-height: 420px; width: auto;" />
+
+<div class="text-xs opacity-60 mt-3 text-center">
+
+The model is the brain. The harness is the body. Without the body, the brain just thinks.
+
+</div>
+
+</div>
+
+</div>
+---
+layout: default
+---
+
 # Why this talk
 
 I started building **q15** — an open-source AI agent runtime in Go — partly because I wanted to understand what an AI agent actually *is* at the substrate level.
 
 What I kept running into: every project, every demo, every blog post used the word **harness**. Claude Code was a harness. Cline was a harness. OpenClaw was a harness. And q15, it turned out, was a harness too.
-
-This talk is what I learned mapping that space, and why I now think "harness engineering" is a useful lens for anyone shipping AI work.
 
 <v-clicks>
 
@@ -212,50 +291,6 @@ flowchart TB
     classDef ext fill:#fef3c7,stroke:#d97706
     class M ext
 ```
----
-layout: default
----
-
-# Why do we need one?
-
-<div class="grid grid-cols-2 gap-8 items-center mt-4">
-
-<div>
-
-The model gives you a brain in a jar. To do anything in the world, that brain needs:
-
-<v-clicks>
-
-1. **A way to express intent** — system prompt, instructions, persona
-2. **Tools** — file system, shell, search, HTTP, custom domain actions
-3. **A loop** — keep calling the model until the task is done (and know when it's done)
-4. **Context** — what just happened, what's true now, what's been tried
-5. **Error handling** — tools fail, models hallucinate, networks drop
-6. **Model selection** — the right brain for the right sub-task, possibly many of them
-
-</v-clicks>
-
-</div>
-
-<div class="flex flex-col items-center">
-
-<img src="/images/brain-in-dome.png" alt="A vintage 80s cartoon villain action figure: a mean pink brain in the open chest of a chunky blue robot" class="rounded-lg shadow-2xl" style="max-height: 460px; width: auto;" />
-
-<div class="text-xs opacity-60 mt-3 text-center">
-
-Brain in a body. The model gives you the brain. The harness gives the brain hands, eyes, and a way to act.
-
-</div>
-
-</div>
-
-</div>
-
-<div v-click="6" class="mt-6 p-4 bg-blue-500 bg-opacity-10 rounded-lg">
-
-**The pattern**: every useful AI application builds these six things. The only question is whether you build them yourself or pick up someone else's harness.
-
-</div>
 ---
 layout: default
 ---
