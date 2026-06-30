@@ -170,16 +170,6 @@ The question is no longer "can the model do it?" — it's "what do I wrap around
 </div>
 
 </v-click>
-
-<v-click>
-
-<div class="mt-4 text-center text-sm opacity-60">
-
-I'll use q15 — the open-source agent runtime I built in Go — as a running example. But the ideas apply to any harness.
-
-</div>
-
-</v-click>
 ---
 layout: default
 ---
@@ -234,6 +224,58 @@ Agent = Model + Harness
 <div class="mt-2 text-center text-sm opacity-70">
 
 The model is the brain. The harness is the body. Without the body, the brain just thinks.
+
+</div>
+
+</v-click>
+---
+layout: default
+---
+
+# How I ended up building one
+
+I installed OpenClaw and used it for a bit. It was great — until I realized it was running arbitrary code on my machine.
+
+<v-clicks>
+
+I wanted to make it useful: web access, a GitHub account, maybe an email address, bash commands. Without those, an agent is useless.
+
+But I didn't want it running in an environment with my API keys.
+
+</v-clicks>
+
+<v-click>
+
+I looked at PicoClaw (also Go). Same problem — the agent needs to run code where your credentials live in the environment.
+
+</v-click>
+
+<v-clicks>
+
+Then I had an idea: a **man-in-the-middle proxy** that injects credentials at the network layer. The agent never sees the keys. I tested it. It worked.
+
+So I thought: why not just build the whole harness? You have models to help you build it. And if you build your own, you add exactly the features you want.
+
+</v-clicks>
+---
+layout: default
+---
+
+# Why build your own?
+
+<v-clicks>
+
+OpenClaw, PicoClaw, Hermes — they're **general-purpose software**. They need to support every chat client, every integration, every deployment model. The codebases are massive.
+
+If you build your own agent, you only add the features **you** need. The codebase stays smaller and more manageable.
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 p-4 bg-blue-500 bg-opacity-10 rounded-lg text-sm">
+
+You have models that can write code. You have a clear idea of what your agent should do. The marginal cost of building your own harness is lower than the cost of understanding someone else's 50,000-line runtime.
 
 </div>
 
@@ -483,7 +525,9 @@ layout: two-cols
 layoutClass: gap-8
 ---
 
-# Security as harness engineering
+# Security as harness engineering — the proxy idea, realized
+
+Remember the proxy idea? That became q15's architecture.
 
 Most AI agent platforms run everything in one process: the model, the tools, the credentials, and the network all share a trust domain.
 
@@ -617,8 +661,8 @@ A pragmatic answer for whoever's listening:
 - **For personal dev work** → Claude Code or Codex CLI. Don't over-think it.
 - **For pair-programming in the IDE** → Cline or Continue. The diff-first UX is genuinely good.
 - **For understanding** → build a 50-line harness yourself. One model, one tool, one loop. Everything else becomes obvious.
-- **For shipping a product** → pick an agent runtime (q15, Hermes, OpenClaw) and stop reinventing orchestration.
-- **For long-running agents** → make sure the runtime treats memory + cognition as first-class. Otherwise you'll bolt it on later and it will be messy.
+- **For shipping a product** → build your own harness. You have models to help you write it. Add only the features you need. The codebase stays small, and you understand every line.
+- **For long-running agents** → make sure your harness treats memory + cognition as first-class. Otherwise you'll bolt it on later and it will be messy.
 
 </v-clicks>
 
