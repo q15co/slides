@@ -459,15 +459,15 @@ Time budget: ~2 min
 layout: default
 ---
 
-# Slow the fuck down
+# The edit is the output. The loop is the method
 
-The harness is where **reliability** lives.
+The model's final output is a file edit. But it doesn't get there in one shot.
 
 <v-clicks>
 
-- The model is fast. The harness needs to be **durable**.
-- Every failure class — tool errors, hallucinated commands, infinite loops, context overflow — needs a **structural solution**, not an ad-hoc patch.
-- The model is the brain. The harness is the body. A fast brain in an unreliable body is useless.
+- Edit → run tests → read the output → edit again
+- Every tool call between edits is the model **building its own context** — from reality, not from a prompt
+- The harness provides the tools. The loop provides the feedback. The model provides the reasoning.
 
 </v-clicks>
 
@@ -475,20 +475,154 @@ The harness is where **reliability** lives.
 
 <div class="mt-6 text-center text-lg opacity-80">
 
-The model is the easy part. The harness is the actual product.
+A better model makes each turn smarter. But the leverage is in the loop.
 
 </div>
 
 </v-click>
 
 <!--
-1-2 minutes. This is the "why this matters" thread.
+1-2 minutes. This is the pivot from mechanical to meaningful.
 
-The talk has been mechanical: API calls, growing payloads, tool calls, loops, exit conditions. Now zoom out.
+All the machinery we've shown — payloads, tool calls, loops, exit conditions — exists to serve this pattern: the model acts, observes the result, and acts again.
 
-The point of all this machinery is NOT to make the model faster. It's to make the system reliable enough to trust. Durable solutions to failure classes — not "I'll add a try/catch and hope."
+The model isn't given perfect context up front. It discovers what it needs by doing. It reads a file, runs a test, sees the error, reads the test file, makes the edit, runs the test again. Each tool call generates context for the next turn.
 
-Connect to q15: memory + cognition, proxy for security, provider abstraction. These are all harness concerns, not model concerns.
+This is why the harness matters: it makes the loop possible. A better model makes each individual turn better. But without the loop, the model is just a very expensive one-shot generator.
+
+Time budget: ~2 min
+-->
+---
+layout: default
+---
+
+# The harness writes the context
+
+The model never sees "the conversation." It sees what the harness **sends**.
+
+<v-clicks>
+
+- System prompt — who you are, how to behave, what tools exist
+- Message history — what the harness chooses to include or omit
+- Tool definitions — what the model can do
+- Skills, memory, context files — injected before the model ever responds
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 text-center opacity-80">
+
+The agent decides what context the model needs. The model decides what to do with it.
+
+</div>
+
+</v-click>
+
+<!--
+1-2 minutes. Bridge from "the loop matters" to "q15 is a specific implementation of this."
+
+The model doesn't see a conversation. It sees a payload. The harness assembles that payload. Two harnesses using the same model can produce wildly different results because they assemble context differently.
+
+This is where q15 gets interesting: it has strong opinions about context assembly. Core memory, working memory, skills, cognition — all shape what the model sees.
+
+Time budget: ~1.5 min
+-->
+---
+layout: default
+---
+
+# q15: a single continuous stream
+
+<div class="text-sm opacity-70 mb-4">
+
+Same model, same API. The difference is what's in the payload.
+
+</div>
+
+<v-clicks>
+
+- **Core memory** — identity, preferences, behavioral instructions — injected directly into the system prompt, every turn
+- **Working memory** — current priorities, active tasks, open threads — auto-injected each turn
+- **Deeper memory** — semantic search, zettelkasten, conversation history — retrievable via tool calls when the model needs it
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-4 text-sm opacity-80">
+
+The model doesn't start from zero in session N+1. The harness ensures that.
+
+</div>
+
+</v-click>
+
+<div class="mt-4 text-center">
+  <span class="demo-cue">DEMO: system prompt in the payload dump</span>
+</div>
+
+<!--
+2-3 minutes. This is the q15 story.
+
+Core memory: AGENT.md, USER.md, SOUL.md — files in /memory/core/. Read and injected into the system prompt every single turn. The model always knows who it is, who the user is, and how to behave. This isn't "memory" in the model sense — it's context assembly.
+
+Working memory: WORKING_MEMORY.md — current priorities, active tasks, open threads, recent progress. Auto-injected each turn. The model knows what's in flight without having to ask.
+
+Deeper memory: semantic search over a Qdrant vector store, zettelkasten notes, conversation history. These are tool calls. The model retrieves them when it needs them — not every turn, just when relevant.
+
+The key insight: the harness decides what's ALWAYS there (core + working memory) vs what's AVAILABLE on demand (semantic, zettel, history). This is context curation, not context dumping.
+
+DEMO: If the payload dump is still running, switch to tmux and point at the system message in the JSONL. Show how the core memory content (AGENT.md, USER.md) appears in the system prompt. Show the working memory block. This is what "the harness writes the context" looks like in practice.
+
+Time budget: ~2.5 min
+-->
+---
+layout: default
+---
+
+# Cognition: context that modifies itself
+
+Background jobs run **between turns** — the model never sees them.
+
+<v-clicks>
+
+- **Semantic memory extraction** — facts and preferences pulled from the conversation, stored durably
+- **Working memory consolidation** — priorities refined, tasks updated, stale items pruned
+- **Verification review** — outputs checked by a second model independently
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 text-center opacity-80">
+
+These modify the context the model sees next time. The model doesn't know it's being shaped. The user doesn't see it happen.
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-4 text-center text-sm opacity-60">
+
+This is the agent's unconscious — behavior shaped by context the model didn't ask for.
+
+</div>
+
+</v-click>
+
+<!--
+2 minutes. This is the most interesting part of the talk.
+
+The model sees context. Cognition jobs MODIFY that context between turns. The model has no idea this is happening — it just sees a slightly different system prompt next time, with refined working memory, newly extracted facts, or a verification flag.
+
+This is not fine-tuning. It's not RAG. It's not prompt engineering in the traditional sense. It's background processes that shape the model's behavior by shaping what it sees — without the model's awareness or involvement.
+
+Analogy: human cognition. You don't consciously decide what to remember. Your brain consolidates, prunes, and reorganizes between conscious moments. q15 does something similar: the "conscious" stream is the conversation. The "unconscious" stream is the cognition jobs.
+
+Each cognition job can run on a DIFFERENT model — cheaper models for consolidation, stronger models for extraction. This is provider abstraction in action.
 
 Time budget: ~2 min
 -->
@@ -501,9 +635,9 @@ layout: default
 <v-clicks>
 
 - The model API is the **smallest piece**. Everything else is the harness.
-- **Memory** is what makes a runtime interesting — session N+1 doesn't start from zero.
-- **Cognition** (background summarisation, consolidation) is what makes it *durable*.
+- **Context assembly** is the actual engineering — not prompt engineering, harness engineering.
 - **Provider abstraction** means you stop caring which model is on the other end.
+- The interesting problems are all in the harness: memory, cognition, reliability, security.
 
 </v-clicks>
 
@@ -529,9 +663,9 @@ layout: default
 
 The model API is the smallest piece — this is the thesis from slide 2, restated with the demo as evidence. You saw how little the model does (text in, text out) and how much the harness does (assemble, parse, execute, loop, exit).
 
-Mention q15 briefly. Mention the payload dump feature you just saw — it's a real PR, not a hack. It's built into q15 behind an env var.
+The previous slides covered q15's architecture in depth. Here, just point to q15 and the payload dump — it's real, it's open source, it's behind an env var.
 
-Time budget: ~2 min
+Time budget: ~1.5 min
 -->
 ---
 layout: center
@@ -576,10 +710,13 @@ Total time budget:
 - Slide 6 (tool calls demo): 4 min
 - Slide 7 (harness loop): 2 min
 - Slide 8 (exit conditions): 2 min
-- Slide 9 (slow down): 2 min
-- Slide 10 (q15): 2 min
-- Slide 11 (thanks): 0.5 min
-Total: ~24 min content + ~15 min Q&A = ~39 min (under 45 min limit)
+- Slide 9 (loop is the method): 2 min
+- Slide 10 (harness writes context): 1.5 min
+- Slide 11 (q15 continuous stream): 2.5 min
+- Slide 12 (cognition): 2 min
+- Slide 13 (what I learned): 1.5 min
+- Slide 14 (thanks): 0.5 min
+Total: ~29.5 min content + ~15 min Q&A = ~44.5 min (under 45 min limit)
 
 BACKUP PLAN if live demo fails:
 - Have the slides with the code snippets — they show the structure
