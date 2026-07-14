@@ -107,13 +107,14 @@ side-by-side() {
 
 # ─── 12. LIVE TAIL — follow the dump in real-time ──────────────────────
 # For the live demo: start this, then send a Telegram message to Jared.
+# NOTE: do NOT pipe through bat — it buffers and breaks live streaming.
 live-tail() {
-  tail -f "$FILE" | jq -C '. | {type, timestamp, model: (.model // ""), status: (.status // ""), finish_reason: (.finish_reason // ""), message_count: (.message_count // "")}' | $BAT
+  tail -f "$FILE" | jq -C '. | {type, timestamp, model: (.model // ""), status: (.status // ""), finish_reason: (.finish_reason // ""), message_count: (.message_count // "")}'
 }
 
 # ─── 13. LIVE TAIL (verbose) — full pretty-print, streaming ─────────────
 live-tail-full() {
-  tail -f "$FILE" | jq -C '.' | $BAT
+  tail -f "$FILE" | jq -C '.'
 }
 
 # ─── 14. LOOP TRACE — one-line-per-turn harness loop summary ───────────

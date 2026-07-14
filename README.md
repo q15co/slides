@@ -2,13 +2,13 @@
 
 Source for the **Introduction to Harness Engineering** talk. Built with
 [Slidev](https://sli.dev/) and deployed to **https://slides.q15.co**
-via Cloudflare Pages.
+via Cloudflare Workers (`wrangler deploy`).
 
 ## Local preview
 
 ```bash
 npm install
-npm run dev    # http://localhost:3031
+npm run dev    # http://localhost:3030
 ```
 
 ## Build
@@ -17,8 +17,8 @@ npm run dev    # http://localhost:3031
 npm run build  # outputs static site to dist/
 ```
 
-The Cloudflare Pages project points at this repo and serves `dist/` as the
-production bundle.
+The Cloudflare Workers project (`wrangler.json`) serves `dist/` as the
+production bundle. Deploy with `npx wrangler deploy`.
 
 ## Visual style
 

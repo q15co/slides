@@ -26,7 +26,7 @@ test without needing a live dump.
 | Growing payload | `growing-payload` | `message_count` per canonical request: 2 → 4 (each turn resends everything) |
 | Growing payload (visual) | `message-bar` | ASCII bar chart: `██` → `████` |
 | Growing payload (bytes) | `payload-size` | Raw HTTP body size growing: 384 bytes → 676 bytes |
-| Token caching | `token-usage` | prompt tokens: 52 → 98 (only the delta would be "cached") |
+| Token usage | `token-usage` | prompt tokens: 52 → 98 (total per request — dump does not break out cached vs. billed) |
 | Tool calls | `tool-calls` | The model's tool call extracted: `{name: "web_search", arguments: {query: "..."}}` |
 | Tool results | `tool-results` | What came back: `{tool_call_id: "call_001", content: "..."}` |
 | Harness loop | `loop-trace` | One-line-per-turn: REQ → RESP(tool_calls) → REQ → RESP(stop) |
@@ -34,7 +34,7 @@ test without needing a live dump.
 | Wire vs canonical | `side-by-side` | OpenAI `content` string vs q15 `parts[]` array |
 | Full round trip | `wire-pair 1` | Both request and response for turn 1 (the tool-result turn) |
 | Human-readable | `conversation-flow` | The whole conversation as a chat transcript |
-| Live demo | `live-tail-full` | `tail -f dump.jsonl | jq -C '.'` piped through bat |
+| Live demo | `live-tail-full` | `tail -f dump.jsonl \| jq -C '.'` (full pretty-print, streaming) |
 
 ## Live demo setup
 
