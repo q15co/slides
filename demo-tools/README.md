@@ -1,17 +1,18 @@
-# q15 dump.jsonl — jq & bat recipes
+# q15 dump.jsonl — jq recipes
 
 Recipes for formatting the `dump.jsonl` payload capture files from PR #137.
+Only requirement: `jq`.
 
 ## Quick start
 
 ```bash
-# If you have jq and bat installed:
+# If you have jq installed:
 chmod +x recipes.sh
 ./recipes.sh help
 ./recipes.sh loop-trace dump.jsonl
 
 # If not, use nix:
-nix shell nixpkgs#jq nixpkgs#bat -c bash recipes.sh loop-trace dump.jsonl
+nix shell nixpkgs#jq -c bash recipes.sh loop-trace dump.jsonl
 ```
 
 The sample `sample.jsonl` shows a 2-turn harness loop: user asks about weather,
@@ -34,7 +35,7 @@ test without needing a live dump.
 | Wire vs canonical | `side-by-side` | OpenAI `content` string vs q15 `parts[]` array |
 | Full round trip | `wire-pair 1` | Both request and response for turn 1 (the tool-result turn) |
 | Human-readable | `conversation-flow` | The whole conversation as a chat transcript |
-| Live demo | `live-tail-full` | `tail -f dump.jsonl \| jq -C '.'` (full pretty-print, streaming) |
+| Live demo | `live-tail-full` | `tail -f dump.jsonl | jq -C '.'` (full pretty-print, streaming) |
 
 ## Live demo setup
 
@@ -62,7 +63,7 @@ test without needing a live dump.
 
 ```bash
 # Pretty-print all entries
-jq -C '.' dump.jsonl | bat --language json --style=plain
+jq -C '.' dump.jsonl
 
 # Just the loop trace
 jq -r '
@@ -78,8 +79,14 @@ tail -f dump.jsonl | jq -C '{type, model, message_count, finish_reason}'
 jq -r 'select(.type == "wire_response") | .body.usage | "prompt=\(.prompt_tokens) total=\(.total_tokens)"' dump.jsonl
 
 # Extract tool calls
-jq -C 'select(.type == "canonical_response") | .messages[] | select(.role == "assistant") | .parts[] | select(.type == "tool_call") | {name, arguments: (.arguments | fromjson)}' dump.jsonl | bat --language json --style=plain
+jq -C 'select(.type == "canonical_response") | .messages[] | select(.role == "assistant") | .parts[] | select(.type == "tool_call") | {name, arguments: (.arguments | fromjson)}' dump.jsonl
 ```
+
+> **Why no `bat`?** Earlier versions piped jq output through `bat` for syntax
+> highlighting, but `bat --style=plain` strips the ESC character from jq's ANSI
+> color codes, leaving raw `[1;39m` sequences visible as literal text. `jq -C`
+> already produces colored, indented output. If you want a pager, pipe through
+> `less -R` instead.
 
 ## JSONL entry types
 

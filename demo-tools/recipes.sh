@@ -1,32 +1,31 @@
 #!/usr/bin/env bash
-# jq + bat recipes for q15 dump.jsonl — Harness Engineering talk
+# jq recipes for q15 dump.jsonl — Harness Engineering talk
 # Usage: source this file, then call any recipe function
 # Or:   ./recipes.sh <command> [dump.jsonl]
 #
-# Requirements: jq, bat (both in nixpkgs)
-#   nix shell nixpkgs#jq nixpkgs#bat -c bash "$0" <command> [file]"
+# Requirements: jq (in nixpkgs)
+#   nix shell nixpkgs#jq -c bash "$0" <command> [file]"
 
 set -euo pipefail
 
 FILE="${2:-sample.jsonl}"
-BAT="bat --language json --style=plain --paging=never"
 
 # ─── 1. ALL ENTRIES — pretty-print every JSONL line, one per entry ──────
 # Shows the full timeline: wire + canonical, interleaved as they occurred.
 all-entries() {
-  jq -C '.' "$FILE" | $BAT
+  jq -C '.' "$FILE"
 }
 
 # ─── 2. CANONICAL ONLY — the q15-internal transcript shape ──────────────
 # Strips wire entries; shows what the harness loop actually sees.
 canonical() {
-  jq -C 'select(.type | startswith("canonical_"))' "$FILE" | $BAT
+  jq -C 'select(.type | startswith("canonical_"))' "$FILE"
 }
 
 # ─── 3. WIRE ONLY — the raw provider API format ─────────────────────────
 # Shows what actually goes over HTTP to OpenAI / Anthropic / etc.
 wire() {
-  jq -C 'select(.type | startswith("wire_"))' "$FILE" | $BAT
+  jq -C 'select(.type | startswith("wire_"))' "$FILE"
 }
 
 # ─── 4. GROWING PAYLOAD — the core talk narrative ───────────────────────
@@ -51,7 +50,7 @@ tool-calls() {
     | .parts[]
     | select(.type == "tool_call")
     | {name: .name, id: .id, arguments: (.arguments | fromjson)}
-  ' "$FILE" | $BAT
+  ' "$FILE"
 }
 
 # ─── 7. TOOL RESULTS — what came back from tool execution ────────────────
@@ -63,7 +62,7 @@ tool-results() {
     | .parts[]
     | select(.type == "tool_result")
     | {tool_call_id: .tool_call_id, content: .content, is_error: (.is_error // false)}
-  ' "$FILE" | $BAT
+  ' "$FILE"
 }
 
 # ─── 8. ASSISTANT TEXT — just the final answer(s) ───────────────────────
@@ -99,10 +98,10 @@ token-usage() {
 # Picks the first wire_request and first canonical_request for comparison.
 side-by-side() {
   echo "=== WIRE (raw provider format) ==="
-  jq -c 'select(.type == "wire_request") | .body | .messages[0:2]' "$FILE" | head -1 | jq -C '.' | $BAT
+  jq -c 'select(.type == "wire_request") | .body | .messages[0:2]' "$FILE" | head -1 | jq -C '.'
   echo ""
   echo "=== CANONICAL (q15 internal) ==="
-  jq -c 'select(.type == "canonical_request") | .messages[0:2]' "$FILE" | head -1 | jq -C '.' | $BAT
+  jq -c 'select(.type == "canonical_request") | .messages[0:2]' "$FILE" | head -1 | jq -C '.'
 }
 
 # ─── 12. LIVE TAIL — follow the dump in real-time ──────────────────────
@@ -163,12 +162,12 @@ payload-size() {
 # ─── 17. WIRE REQUEST (first) — full pretty-printed provider API call ──
 # Shows the complete HTTP body sent to the provider — tools, messages, params.
 wire-request-first() {
-  jq -c 'select(.type == "wire_request") | .body' "$FILE" | head -1 | jq -C '.' | $BAT
+  jq -c 'select(.type == "wire_request") | .body' "$FILE" | head -1 | jq -C '.'
 }
 
 # ─── 18. WIRE RESPONSE (first) — full pretty-printed provider response ─
 wire-response-first() {
-  jq -c 'select(.type == "wire_response") | .body' "$FILE" | head -1 | jq -C '.' | $BAT
+  jq -c 'select(.type == "wire_response") | .body' "$FILE" | head -1 | jq -C '.'
 }
 
 # ─── 19. CANONICAL REQUEST (Nth) — show one request by index ───────────
@@ -176,7 +175,7 @@ wire-response-first() {
 # Shows how the payload looks on the Nth turn (0-indexed).
 canonical-request-n() {
   local N="${3:-0}"
-  jq -s -C "[.[] | select(.type == \"canonical_request\")][$N]" "$FILE" | $BAT
+  jq -s -C "[.[] | select(.type == \"canonical_request\")][$N]" "$FILE"
 }
 
 # ─── 20. FULL WIRE PAIR — request + response for one turn ──────────────
@@ -185,10 +184,10 @@ canonical-request-n() {
 wire-pair() {
   local N="${3:-0}"
   echo "=== WIRE REQUEST (turn $N) ==="
-  jq -s -C "[.[] | select(.type == \"wire_request\")][$N] | .body" "$FILE" | $BAT
+  jq -s -C "[.[] | select(.type == \"wire_request\")][$N] | .body" "$FILE"
   echo ""
   echo "=== WIRE RESPONSE (turn $N) ==="
-  jq -s -C "[.[] | select(.type == \"wire_response\")][$N] | .body" "$FILE" | $BAT
+  jq -s -C "[.[] | select(.type == \"wire_response\")][$N] | .body" "$FILE"
 }
 
 # ─── Dispatcher ──────────────────────────────────────────────────────────
@@ -228,6 +227,7 @@ if [[ -z "$CMD" || "$CMD" == "help" || "$CMD" == "--help" ]]; then
   echo ""
   echo "Usage: $0 <recipe> [dump.jsonl]"
   echo "  (defaults to sample.jsonl if no file given)"
+  echo "  Only requirement: jq"
   exit 0
 fi
 
