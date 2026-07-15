@@ -229,40 +229,32 @@ Key point: the harness is engineering, not magic. It's code you can read, modify
 layout: default
 ---
 
-# Show and Tell
+<div class="grid grid-cols-12 gap-6 items-center h-full">
 
-<div class="grid grid-cols-12 gap-6 items-center mt-2">
-
-<div class="col-span-6 text-sm">
-
-Zwei Co-Präsentatoren: **Adriaan** (Mensch) und **Jared** (Agent).
+<div class="col-span-5 text-sm pl-4">
 
 Adriaan erklärt. Jared zeigt.
 
-Das ist der Plan — wir nehmen euch mit durch den Körper, Stück für Stück, live.
+<div class="mt-4 opacity-70">
 
-</div>
-
-<div class="col-span-6">
-
-<img src="/show-and-tell.jpg" class="rounded-lg w-full" />
+Zwei Co-Präsentatoren: ein Mensch und ein Agent.
 
 </div>
 
 </div>
 
-<div class="mt-2 text-center text-sm opacity-60">
+<div class="col-span-7">
 
-Jeder Abschnitt: ein Konzept, dann eine Live-Demo. Ihr seht, wie der Körper funktioniert — nicht nur eine Folie darüber.
+<img src="/show-and-tell.jpg" class="rounded-lg mx-auto" style="max-height: 80vh;" />
+
+</div>
 
 </div>
 
 <!--
-45 seconds. This is the show-and-tell framing. The image shows the talk outline — our shared script.
+45 seconds. The image is an anime-style "Show and Tell" infographic for q15 — presenter, duck mascot, feature bar (Tools, Memory, Sessions, Approvals). It already carries the title and the key bullets, so the slide text only adds the co-presenter framing.
 
-Adriaan narrates the concepts; Jared demonstrates them live in the terminal. Each section of the outline is a concept followed by a live demo. The audience sees the harness working, not just slides about it.
-
-This sets expectations: this is not a lecture. It's a demonstration. Two presenters — one human, one agent — walking through the body together.
+Adriaan narrates the concepts; Jared demonstrates them live in the terminal. This is not a lecture — it's a demonstration. Two presenters, one human and one agent, walking through the harness together.
 -->
 
 ---
