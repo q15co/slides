@@ -121,6 +121,10 @@ Eine Einführung in Harness Engineering
   </span>
 </div>
 
+<div class="abs-bl m-6 text-sm opacity-60">
+  Eine Live-Demo-Tour durch q15 — den Harness, den ich gebaut habe
+</div>
+
 <div class="abs-br m-6 text-xs opacity-50">
   Drücke <kbd>space</kbd> für weiter · <kbd>o</kbd> für Übersicht
 </div>
@@ -130,6 +134,7 @@ Eine Einführung in Harness Engineering
 
 This is a demo-driven talk. Slides are signposts. The real content is live.
 -->
+
 ---
 layout: default
 ---
@@ -171,6 +176,7 @@ Krang is the perfect metaphor: a genius brain that is completely helpless withou
 
 This sets up the entire talk: what does it take to turn a brain into an agent?
 -->
+
 ---
 layout: default
 ---
@@ -191,6 +197,8 @@ Er gibt dem Gehirn einen **Loop** — die Fähigkeit, weiterzumachen, bis die Au
 
 Das Gehirn entscheidet. Der Körper handelt.
 
+Ich habe einen solchen Körper gebaut. Er heißt **q15**. Der Agent darin heißt **Jared**.
+
 </div>
 
 <div class="col-span-5">
@@ -203,7 +211,7 @@ Das Gehirn entscheidet. Der Körper handelt.
 
 <div class="mt-2 text-center text-sm opacity-60">
 
-Harness Engineering: Den Körper bauen, der das Gehirn arbeiten lässt.
+Harness Engineering: Den Körper bauen, der das Gehirn handlungsfähig macht.
 
 </div>
 
@@ -216,6 +224,7 @@ The rest of this talk is a tour through the body: how it works, what each part d
 
 Key point: the harness is engineering, not magic. It's code you can read, modify, and build. That's what we're going to look at.
 -->
+
 ---
 layout: default
 ---
@@ -249,8 +258,9 @@ The most naive way to use a coding agent: ask for something, tell it why it's wr
 
 A little smarter: if you're off track, just start a new context window. "We went down that path. Let's start again."
 
-This is from Dex's talk on context engineering (AI Engineer SF, June 2025). The insight is real: context degrades. But the solution is manual labor. You decide when to reset. You decide what to carry forward.
+This insight is real: context degrades. But the solution is manual labor. You decide when to reset. You decide what to carry forward.
 -->
+
 ---
 layout: default
 ---
@@ -270,8 +280,8 @@ Dein Context Window ist endlich. Nutzt du zu viel davon, werden die Ergebnisse *
 
 <v-clicks>
 
-- Bei etwa 40 % des Context Windows setzen abnehmende Erträge ein
-- Wenn du bei 80 % bist, ist das Modell in der **Dumb Zone** — es hat zu viel Rauschen, um klar zu denken
+- Lange vor dem Limit setzen abnehmende Erträge ein — wie viel, hängt vom Task ab
+- Irgendwann ist das Modell in der **Dumb Zone** — es hat zu viel Rauschen, um klar zu denken
 - Mehr Context ≠ besser. Falscher Context ist schlimmer als gar kein Context
 
 </v-clicks>
@@ -287,7 +297,7 @@ Das Modell ist zustandslos. Das Einzige, was beeinflusst, was als Nächstes hera
 </v-click>
 
 <!--
-2 minutes. This is Jeff Houndley's research, popularized by Dex.
+2 minutes. This is based on research on context degradation in LLMs.
 
 Key equation: the more you use the context window, the worse outcomes you get. It's not linear — there's a cliff.
 
@@ -295,13 +305,14 @@ LLMs are stateless but not pure functions. They're nondeterministic. But the ONL
 
 So: optimize for correctness, completeness, size, and trajectory. Trajectory matters — if you keep telling the agent it's wrong and yelling at it, the most likely next token is "do something wrong so the human can yell at me again."
 -->
+
 ---
 layout: default
 ---
 
 # Der Pivot
 
-Dex' Antwort: **bewusste Kompaktierung** — Context manuell in eine Markdown-Datei komprimieren, prüfen, taggen und mit der komprimierten Version frisch starten.
+Die bisherige Antwort: **bewusste Kompaktierung** — Context manuell in eine Markdown-Datei komprimieren, prüfen, taggen und mit der komprimierten Version frisch starten.
 
 <div class="mt-6 text-center text-lg opacity-80">
 
@@ -330,12 +341,13 @@ Das ist Harness Engineering.
 <!--
 2 minutes. This is the pivot — the thesis of the talk.
 
-Dex calls it "harness engineering" — how you integrate with the model API, how you customize your context, how you manage the loop. I'm taking that term and building on it.
+The term "harness engineering" comes from the broader AI engineering community — how you integrate with the model API, how you customize your context, how you manage the loop. I'm taking that concept and building on it.
 
-The difference: Dex's approach is a workflow for humans using coding agents. My approach is building the agent itself. q15 is a continuously running agent that manages its own context without manual resets.
+The difference: the manual approach is a workflow for humans using coding agents. My approach is building the agent itself. q15 is a continuously running agent that manages its own context without manual resets.
 
 Harness engineering = writing code that automatically creates and manages context in a way that makes the agent useful without refreshing the context window manually.
 -->
+
 ---
 layout: default
 ---
@@ -368,15 +380,8 @@ Das Modell ist das kleinste Stück. Alles andere ist der Harness.
 
 </v-click>
 
-<v-click>
 
-<div class="mt-3 text-center opacity-50 text-xs">
 
-Manche nennen die nächste Etage „Loop Engineering" — geplante Automatisierungen, Sub-Agents, selbstfütterndes Memory. Dieselben Bausteine, jetzt autonom laufend.
-
-</div>
-
-</v-click>
 
 <!--
 1.5 minutes. Define the term clearly.
@@ -385,10 +390,55 @@ Harness engineering encompasses: context windows (what goes in), skills (reusabl
 
 Simon Willison: "An agent is just tools in a loop." The harness is what makes that loop work — what tools exist, how context is assembled, how long the loop runs, what gets remembered.
 
-You may hear "loop engineering" — the idea that you should design systems that prompt agents on a schedule, not prompt them yourself. Same primitives: automations (cognition jobs), skills, sub-agents, persistent memory. Loop engineering is the floor above the harness. We're building the foundation here.
-
 This talk walks through each of these pieces, with live demos showing the actual API traffic.
 -->
+
+---
+layout: default
+---
+
+# Agency: Was macht einen Agenten aus?
+
+Ein Agent ist etwas, das eine **Aktion ausführen** kann.
+
+<div class="mt-6">
+
+> "An agent is just tools in a loop." — Simon Willison
+
+</div>
+
+<v-clicks>
+
+- Ein Chatbot beantwortet Fragen. Er hat keine Tools. Keinen Loop. Keine Aktion.
+- Ein Agent hat Tools, einen Loop und die Fähigkeit, **auf die Welt einzuwirken** — Dateien lesen, Befehle ausführen, das Web durchsuchen, Code schreiben.
+- Die Tools geben dem Modell die Fähigkeit zur Aktion. Der Loop gibt ihm Ausdauer. Der Harness gibt ihm Struktur.
+
+</v-clicks>
+
+<v-click>
+
+<div class="mt-6 text-center text-lg opacity-80">
+
+Ohne Tools ist es eine Suchmaschine mit Thesaurus. Mit Tools und einem Loop ist es ein Agent.
+
+</div>
+
+</v-click>
+
+<!--
+1 minute. Define agency clearly.
+
+Simon Willison's definition: "An agent is just tools in a loop." This is the simplest correct definition.
+
+A chatbot: text in, text out. No tools, no loop, no action. It can answer questions but can't DO anything.
+
+An agent: tools + a loop. It can read files, run commands, search the web, write code, and feed the results back to the model for the next decision. It can act on the world.
+
+The harness is what makes the difference. The harness provides the tools, manages the loop, compiles the context. Without the harness, you have a chatbot. With the harness, you have an agent.
+
+Don't overthink this definition. Don't anthropomorphize. It's tools in a loop.
+-->
+
 ---
 layout: default
 ---
@@ -447,6 +497,7 @@ Point at each color: blue is the system prompt (where core memory, working memor
 
 This is what goes over the wire. This is what the model sees. Everything else — memory, skills, cognition — is upstream of this array.
 -->
+
 ---
 layout: default
 ---
@@ -488,283 +539,7 @@ DEMO: Show the curl command, run it against Ollama Cloud, pipe through jq. Point
 
 The provider here is Ollama Cloud — an OpenAI-compatible endpoint. Any model behind it (GLM, Kimi, MiniMax, DeepSeek, and more) speaks the same protocol. The harness doesn't care which model is on the other end.
 -->
----
-layout: default
----
 
-# Der Payload wächst jeden Turn
-
-Turn 1: System Prompt + User Message
-
-Turn 2: System Prompt + User Message + Assistant Response + Tool Result + nächste User Message
-
-Turn 3: all das + mehr Tool Calls + mehr Results
-
-<div class="mt-6 text-center opacity-80">
-
-Er schrumpft nie. Das Context Window ist endlich. Das ist die Dumb Zone in Aktion.
-
-</div>
-
-<div class="mt-4">
-
-```text
-Turn 1:  ████░░░░░░░░░░░░░░░░░░  ~5K tokens
-Turn 2:  ████████░░░░░░░░░░░░░░  ~12K tokens
-Turn 3:  ████████████░░░░░░░░░░  ~25K tokens
-Turn 5:  ██████████████████░░░░  ~60K tokens  ← entering the dumb zone
-```
-
-</div>
-
-<div class="mt-4 text-center">
-  <span class="demo-cue">DEMO: Payload live wachsen sehen</span>
-</div>
-
-<!--
-3 minutes. This connects the dumb zone concept to the live demo.
-
-DEMO ACTIONS:
-1. Start live-tail-full on the dump file
-2. Send Jared a message in Telegram: "check the git status of the q15 repo and tell me if there are uncommitted changes"
-3. Watch the first canonical_request: system prompt + user message + tool definitions
-4. Watch the first canonical_response: assistant message with tool_call (exec)
-5. Watch the second canonical_request: system prompt + user message + assistant tool_call + tool_result — BIGGER
-6. Run growing-payload recipe: one line per turn showing message_count growing
-
-KEY POINT: The model sees the entire history every time. It has no memory between calls. Every turn, the harness re-assembles and re-sends everything. The payload only grows. This is WHY context management matters — and why harness engineering is about keeping the smart zone as long as possible.
-
-Token caching note: the payload grows, but most of it is the SAME as last time. Providers cache the prefix. Identical content = cached tokens at a fraction of the cost. The growing payload is WHY caching matters. Without it, turn N costs N× more.
--->
----
-layout: default
----
-
-# Der Harness-Loop
-
-<div style="margin-top:0.5rem;">
-  <img src="/harness-loop.png" style="width:70%;margin:0 auto;display:block;" />
-</div>
-
-<v-clicks>
-
-- Das Modell sieht nie den Loop — es sieht **einen Turn nach dem anderen**
-- Harness Engineering ist der Unterschied zwischen Harnesses: was als Tool zählt, wie Context kompiliert wird, was erinnert wird
-
-</v-clicks>
-
-<!--
-2 minutes. The conceptual anchor.
-
-The loop: user sends input → harness compiles context (system prompt + memory + history + tools) → calls model → model returns text or tool_calls → if tool_calls, execute → feed results back → compile new context → call model again → repeat until the model stops emitting tool_calls.
-
-"Compile" is the key word. The harness doesn't just forward messages. It ASSEMBLES them. It decides what goes in, what gets pruned, what gets injected. This is where context management happens.
-
-From Dex's talk: "an agent is just tools in a loop" (via Simon Willison). The harness is what makes the loop possible and what makes each turn productive.
--->
----
-layout: default
----
-
-# Context kompilieren: die Identität des Agenten
-
-Das Modell startet nicht bei null. Der Harness injiziert jeden Turn, **wer der Agent ist**.
-
-<div class="mt-4 grid grid-cols-2 gap-4 text-sm">
-  <div>
-    <div class="font-bold text-blue mb-1">Core Memory</div>
-    <div class="opacity-70 text-xs">
-      <div><code>AGENT.md</code> — Rolle, Verhaltensprotokoll</div>
-      <div><code>USER.md</code> — Benutzeridentität, Präferenzen</div>
-      <div><code>SOUL.md</code> — Stimme, wie denken, wie arbeiten</div>
-    </div>
-    <div class="mt-2 text-xs opacity-60">Injiziert in den System Prompt, jeden Turn, automatisch.</div>
-  </div>
-  <div>
-    <div class="font-bold text-green mb-1">Working Memory</div>
-    <div class="opacity-70 text-xs">
-      <div><code>WORKING_MEMORY.md</code></div>
-      <div>Aktuelle Prioritäten, aktive Tasks, offene Threads</div>
-    </div>
-    <div class="mt-2 text-xs opacity-60">Auto-injiziert jeden Turn. Das Modell weiß, was läuft, ohne zu fragen.</div>
-  </div>
-</div>
-
-<v-click>
-
-<div class="mt-4 text-center opacity-80">
-
-Das Modell entscheidet nicht, sich zu erinnern. Der Harness stellt es sicher. Das ist Personality als Code.
-
-</div>
-
-</v-click>
-
-<div class="mt-4 text-center">
-  <span class="demo-cue">DEMO: System Prompt im Payload-Dump</span>
-</div>
-
-<!--
-2 minutes. This is the q15 story — automated context management.
-
-Core memory: AGENT.md, USER.md, SOUL.md — files in the memory core directory. Read and injected into the system prompt every single turn. The model always knows who it is, who the user is, and how to behave.
-
-Working memory: WORKING_MEMORY.md — current priorities, active tasks, open threads, recent progress. Auto-injected each turn.
-
-The key insight vs Dex's manual compaction: q15 does this AUTOMATICALLY. The harness decides what's ALWAYS there (core + working memory) vs what's AVAILABLE on demand (semantic search, zettelkasten, history). This is context curation, not context dumping.
-
-This is what "personality" means in harness engineering: not a system prompt you paste, but durable files that the harness reads and injects every turn. You can version-control personality. You can review it. You can diff it.
-
-DEMO: Point at the system message in the JSONL dump. Show the core memory content (AGENT.md, USER.md) appearing in the system prompt. Show the working memory block. This is what "the harness compiles context" looks like in practice.
--->
----
-layout: default
----
-
-# Skills: wiederverwendbares Wissen als Code
-
-Ein Skill ist eine Markdown-Datei, die dem Agenten beibringt, wie er etwas macht.
-
-<div class="mt-2 text-xs">
-
-```markdown
-# /skills/cloudflare/SKILL.md
----
-name: cloudflare
-description: Build with Cloudflare Workers, Pages, KV, R2, AI.
----
-
-## Commands
-\`\`\`bash
-wrangler deploy       # deploy a Worker
-wrangler kv:key put    # write to KV
-wrangler r2 object put # upload to R2
-\`\`\`
-```
-
-</div>
-
-<div class="text-sm mt-2">
-
-<v-clicks>
-
-- **Markdown, das auf Markdown verweist** — das Modell liest die SKILL.md, folgt Links zu tieferen Referenzen wenn nötig
-- **Shell-Skripte** — ausführbares Wissen, das das Modell ausführt, statt Output-Tokens zu generieren
-- **Token-Effizienz** — ein 500-zeiliges Referenzdokument kostet null Tokens, bis das Modell entscheidet, es zu lesen
-
-</v-clicks>
-
-</div>
-
-<!--
-2 minutes. Skills are the core innovation of q15's context management.
-
-The SKILL.md format: a markdown file with YAML frontmatter (name, description) and structured content. The description goes into the skill catalog (injected into the system prompt as a one-liner). The full content is loaded only when the model decides to use the skill.
-
-This is progressive disclosure: the model sees a one-line catalog entry (cheap), and only loads the full skill when relevant (on-demand). This keeps the context window small while making deep knowledge available.
-
-Markdown referencing markdown: the SKILL.md links to reference files. The model follows those links using read_file when it needs more detail. The harness doesn't load everything — the model pulls what it needs.
-
-Shell scripts: instead of the model generating 50 lines of bash (costly output tokens), it reads a 50-line script and executes it. The knowledge is pre-written, version-controlled, and reusable.
-
-This is harness engineering in action: encoding knowledge as code that the agent can discover and use, rather than relying on the model to figure it out from scratch each time.
--->
-
----
-layout: default
----
-
-# MCP: strukturierter Tool-Zugriff
-
-**Model Context Protocol** — ein Standard, um Modellen Zugriff auf Tools zu geben.
-
-<v-clicks>
-
-- MCP-Server stellen Tools, Ressourcen und Prompts über ein JSON-RPC-Protokoll bereit
-- Jeder MCP-Client (Claude Desktop, q15, andere) kann sich mit jedem MCP-Server verbinden
-- Standardisiert, aber wortreich — jeder Tool Call fügt JSON-Overhead zum Context Window hinzu
-
-</v-clicks>
-
-<v-click>
-
-<div class="mt-6 text-center opacity-80">
-
-MCP ist ein Protokoll. Skills sind ein Pattern. sie schließen sich nicht gegenseitig aus.
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="mt-4 text-sm opacity-70">
-
-q15 setzt auf Skills statt (oder ergänzend zu) MCP: Markdown ist leichter, Links sind günstiger, und das Wissen bleibt über Sessions hinweg bestehen — ohne laufenden Server.
-
-</div>
-
-</v-click>
-
-<!--
-1 minute. Brief MCP intro for context, then pivot to skills.
-
-MCP (Model Context Protocol) is Anthropic's standard for connecting models to tools. It's a JSON-RPC protocol where MCP servers expose tools, resources, and prompts. Any client can connect to any server. It's standardized.
-
-But MCP tool definitions go into the context window as JSON. Every tool, every parameter, every description — all tokens. If you have many MCP servers, you're in the dumb zone before you even start working.
-
-q15's approach: skills. A skill catalog entry is one line of text in the system prompt. The full skill (which could be 500 lines) is loaded on demand. This is more token-efficient than MCP for the common case.
-
-They're not mutually exclusive — you can use both. But skills are q15's primary pattern for giving the agent knowledge.
--->
----
-layout: default
----
-
-# Tools: Das Modell sammelt seinen eigenen Context
-
-Das Modell startet mit dem, was der Harness injiziert hat. Aber es kann **mehr nachziehen**.
-
-<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-  <div class="p-3 bg-blue-500 bg-opacity-10 rounded-lg">
-    <div class="font-bold">read_file</div>
-    <div class="opacity-70 text-xs mt-1">Liest jede Datei im Workspace, Memory oder Skills. Das Modell kennt deine Codebase nicht — es liest sie.</div>
-  </div>
-  <div class="p-3 bg-green-500 bg-opacity-10 rounded-lg">
-    <div class="font-bold">web_search</div>
-    <div class="opacity-70 text-xs mt-1">Durchsucht das Live-Web. Wenn das Modell aktuelle Informationen braucht, sucht es — keine veralteten Trainingsdaten.</div>
-  </div>
-  <div class="p-3 bg-purple-500 bg-opacity-10 rounded-lg">
-    <div class="font-bold">web_fetch</div>
-    <div class="opacity-70 text-xs mt-1">Holt und liest eine URL. Das Modell folgt Links, liest Dokumentation, zieht Referenzen rein.</div>
-  </div>
-  <div class="p-3 bg-orange-500 bg-opacity-10 rounded-lg">
-    <div class="font-bold">exec</div>
-    <div class="opacity-70 text-xs mt-1">Führt beliebige Kommandos aus. Bash ist der universelle Wrapper um die meiste Software.</div>
-  </div>
-</div>
-
-<v-click>
-
-<div class="mt-6 text-center opacity-80">
-
-Das Modell baut sich iterativ Context aus der Realität auf — nicht aus einem Prompt, den du geschrieben hast, sondern aus dem tatsächlichen Dateisystem, Web und der Ausführungsumgebung.
-
-</div>
-
-</v-click>
-
-<!--
-1.5 minutes. This is the "gathering context" phase.
-
-The harness injects core memory and working memory every turn. But the model needs MORE — it needs to read files, search the web, run commands. That's what tools are for.
-
-Key insight from Dex's talk: "on-demand compressed context." The model doesn't get everything up front. It gets a catalog (cheap) and pulls what it needs (on demand). This keeps the smart zone large.
-
-The model reads a file → that file content goes into the next turn's context → the model reasons about it → it reads another file or runs a command → that result goes into the next context → repeat. Each tool call is the model building its own context from reality.
-
-This is the opposite of stuffing everything into the system prompt. It's progressive disclosure driven by the model's own decisions.
--->
 ---
 layout: default
 ---
@@ -829,11 +604,265 @@ This is important for harness engineering: the context compilation, the tools, t
 
 Token caching also lives at the provider level — the provider handles it, the harness doesn't need to know.
 -->
+
 ---
 layout: default
 ---
 
-# Tool Calls: Das Modell kann nichts TUN
+# Der Payload wächst jeden Turn
+
+Turn 1: System Prompt + User Message
+
+Turn 2: System Prompt + User Message + Assistant Response + Tool Result + nächste User Message
+
+Turn 3: all das + mehr Tool Calls + mehr Results
+
+<div class="mt-6 text-center opacity-80">
+
+Er schrumpft nie. Das Context Window ist endlich. Das ist die Dumb Zone in Aktion.
+
+</div>
+
+<div class="mt-4">
+
+```text
+Turn 1:  ████░░░░░░░░░░░░░░░░░░  ~5K tokens
+Turn 2:  ████████░░░░░░░░░░░░░░  ~12K tokens
+Turn 3:  ████████████░░░░░░░░░░  ~25K tokens
+Turn 5:  ██████████████████░░░░  ~60K tokens  ← entering the dumb zone
+```
+
+</div>
+
+<div class="mt-4 text-center">
+  <span class="demo-cue">DEMO: Payload live wachsen sehen</span>
+</div>
+
+<!--
+3 minutes. This connects the dumb zone concept to the live demo.
+
+DEMO ACTIONS:
+1. Start live-tail-full on the dump file
+2. Send Jared a message in Telegram: "check the git status of the q15 repo and tell me if there are uncommitted changes"
+3. Watch the first canonical_request: system prompt + user message + tool definitions
+4. Watch the first canonical_response: assistant message with tool_call (exec)
+5. Watch the second canonical_request: system prompt + user message + assistant tool_call + tool_result — BIGGER
+6. Run growing-payload recipe: one line per turn showing message_count growing
+
+KEY POINT: The model sees the entire history every time. It has no memory between calls. Every turn, the harness re-assembles and re-sends everything. The payload only grows. This is WHY context management matters — and why harness engineering is about keeping the smart zone as long as possible.
+
+Token caching note: the payload grows, but most of it is the SAME as last time. Providers cache the prefix. Identical content = cached tokens at a fraction of the cost. The growing payload is WHY caching matters. Without it, turn N costs N× more.
+-->
+
+---
+layout: default
+---
+
+# Der Harness-Loop
+
+<div style="margin-top:0.5rem;">
+  <img src="/harness-loop.png" style="width:70%;margin:0 auto;display:block;" />
+</div>
+
+<v-clicks>
+
+- Das Modell sieht nie den Loop — es sieht **einen Turn nach dem anderen**
+- Harness Engineering ist der Unterschied zwischen Harnesses: was als Tool zählt, wie Context kompiliert wird, was erinnert wird
+
+</v-clicks>
+
+<!--
+2 minutes. The conceptual anchor.
+
+The loop: user sends input → harness compiles context (system prompt + memory + history + tools) → calls model → model returns text or tool_calls → if tool_calls, execute → feed results back → compile new context → call model again → repeat until the model stops emitting tool_calls.
+
+"Compile" is the key word. The harness doesn't just forward messages. It ASSEMBLES them. It decides what goes in, what gets pruned, what gets injected. This is where context management happens.
+
+From Simon Willison: "an agent is just tools in a loop." The harness is what makes the loop possible and what makes each turn productive.
+-->
+
+---
+layout: default
+---
+
+# Context kompilieren: die Identität des Agenten
+
+Das Modell startet nicht bei null. Der Harness injiziert jeden Turn, **wer der Agent ist**.
+
+<div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+  <div>
+    <div class="font-bold text-blue mb-1">Core Memory</div>
+    <div class="opacity-70 text-xs">
+      <div><code>AGENT.md</code> — Rolle, Verhaltensprotokoll</div>
+      <div><code>USER.md</code> — Benutzeridentität, Präferenzen</div>
+      <div><code>SOUL.md</code> — Stimme, wie denken, wie arbeiten</div>
+    </div>
+    <div class="mt-2 text-xs opacity-60">Injiziert in den System Prompt, jeden Turn, automatisch.</div>
+  </div>
+  <div>
+    <div class="font-bold text-green mb-1">Working Memory</div>
+    <div class="opacity-70 text-xs">
+      <div><code>WORKING_MEMORY.md</code></div>
+      <div>Aktuelle Prioritäten, aktive Tasks, offene Threads</div>
+    </div>
+    <div class="mt-2 text-xs opacity-60">Auto-injiziert jeden Turn. Das Modell weiß, was läuft, ohne zu fragen.</div>
+  </div>
+</div>
+
+<v-click>
+
+<div class="mt-4 text-center opacity-80">
+
+Das Modell entscheidet nicht, sich zu erinnern. Der Harness stellt es sicher. Das ist Personality als Code.
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-4 p-3 bg-black/20 rounded-lg text-xs opacity-70 font-mono">
+
+## SOUL.md (Auszug)<br>
+## Voice<br>
+• Based on Jared Dunn from HBO's Silicon Valley<br>
+• Polite, warm, and professional<br>
+• Concise but not dry or robotic<br><br>
+## How to Work<br>
+• Do the thing, then show the result<br>
+• Verify before claiming<br>
+• Follow through completely
+
+</div>
+
+</v-click>
+
+<div class="mt-4 text-center">
+  <span class="demo-cue">DEMO: System Prompt im Payload-Dump</span>
+</div>
+
+<!--
+2 minutes. This is the q15 story — automated context management.
+
+Core memory: AGENT.md, USER.md, SOUL.md — files in the memory core directory. Read and injected into the system prompt every single turn. The model always knows who it is, who the user is, and how to behave.
+
+Working memory: WORKING_MEMORY.md — current priorities, active tasks, open threads, recent progress. Auto-injected each turn.
+
+The key insight vs manual compaction: q15 does this AUTOMATICALLY. The harness decides what's ALWAYS there (core + working memory) vs what's AVAILABLE on demand (semantic search, zettelkasten, history). This is context curation, not context dumping.
+
+This is what "personality" means in harness engineering: not a system prompt you paste, but durable files that the harness reads and injects every turn. You can version-control personality. You can review it. You can diff it.
+
+DEMO: Point at the system message in the JSONL dump. Show the core memory content (AGENT.md, USER.md) appearing in the system prompt. Show the working memory block. This is what "the harness compiles context" looks like in practice.
+-->
+
+---
+layout: default
+---
+
+# Skills: wiederverwendbares Wissen als Code
+
+Ein Skill ist eine Markdown-Datei, die dem Agenten beibringt, wie er etwas macht.
+
+<div class="mt-2 text-xs">
+
+```markdown
+# /skills/cloudflare/SKILL.md
+---
+name: cloudflare
+description: Build with Cloudflare Workers, Pages, KV, R2, AI.
+---
+
+## Commands
+\`\`\`bash
+wrangler deploy       # deploy a Worker
+wrangler kv:key put    # write to KV
+wrangler r2 object put # upload to R2
+\`\`\`
+```
+
+</div>
+
+<div class="text-sm mt-2">
+
+<v-clicks>
+
+- **Markdown, das auf Markdown verweist** — das Modell liest die SKILL.md, folgt Links zu tieferen Referenzen wenn nötig
+- **Shell-Skripte** — ausführbares Wissen, das das Modell ausführt, statt Output-Tokens zu generieren
+- **Token-Effizienz** — ein 500-zeiliges Referenzdokument kostet null Tokens, bis das Modell entscheidet, es zu lesen
+
+</v-clicks>
+
+</div>
+
+<!--
+2 minutes. Skills are the core innovation of q15's context management.
+
+The SKILL.md format: a markdown file with YAML frontmatter (name, description) and structured content. The description goes into the skill catalog (injected into the system prompt as a one-liner). The full content is loaded only when the model decides to use the skill.
+
+This is progressive disclosure: the model sees a one-line catalog entry (cheap), and only loads the full skill when relevant (on-demand). This keeps the context window small while making deep knowledge available.
+
+Markdown referencing markdown: the SKILL.md links to reference files. The model follows those links using read_file when it needs more detail. The harness doesn't load everything — the model pulls what it needs.
+
+Shell scripts: instead of the model generating 50 lines of bash (costly output tokens), it reads a 50-line script and executes it. The knowledge is pre-written, version-controlled, and reusable.
+
+This is harness engineering in action: encoding knowledge as code that the agent can discover and use, rather than relying on the model to figure it out from scratch each time.
+-->
+
+
+---
+layout: default
+---
+
+# Tools: Das Modell sammelt seinen eigenen Context
+
+Das Modell startet mit dem, was der Harness injiziert hat. Aber es kann **mehr nachziehen**.
+
+<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+  <div class="p-3 bg-blue-500 bg-opacity-10 rounded-lg">
+    <div class="font-bold">read_file</div>
+    <div class="opacity-70 text-xs mt-1">Liest jede Datei im Workspace, Memory oder Skills. Das Modell kennt deine Codebase nicht — es liest sie.</div>
+  </div>
+  <div class="p-3 bg-green-500 bg-opacity-10 rounded-lg">
+    <div class="font-bold">web_search</div>
+    <div class="opacity-70 text-xs mt-1">Durchsucht das Live-Web. Wenn das Modell aktuelle Informationen braucht, sucht es — keine veralteten Trainingsdaten.</div>
+  </div>
+  <div class="p-3 bg-purple-500 bg-opacity-10 rounded-lg">
+    <div class="font-bold">web_fetch</div>
+    <div class="opacity-70 text-xs mt-1">Holt und liest eine URL. Das Modell folgt Links, liest Dokumentation, zieht Referenzen rein.</div>
+  </div>
+  <div class="p-3 bg-orange-500 bg-opacity-10 rounded-lg">
+    <div class="font-bold">exec</div>
+    <div class="opacity-70 text-xs mt-1">Führt beliebige Kommandos aus. Bash ist der universelle Wrapper um die meiste Software.</div>
+  </div>
+</div>
+
+<v-click>
+
+<div class="mt-6 text-center opacity-80">
+
+Das Modell baut sich iterativ Context aus der Realität auf — nicht aus einem Prompt, den du geschrieben hast, sondern aus dem tatsächlichen Dateisystem, Web und der Ausführungsumgebung.
+
+</div>
+
+</v-click>
+
+<!--
+1.5 minutes. This is the "gathering context" phase.
+
+The harness injects core memory and working memory every turn. But the model needs MORE — it needs to read files, search the web, run commands. That's what tools are for.
+
+Key insight: "on-demand compressed context." The model doesn't get everything up front. It gets a catalog (cheap) and pulls what it needs (on demand). This keeps the smart zone large.
+
+The model reads a file → that file content goes into the next turn's context → the model reasons about it → it reads another file or runs a command → that result goes into the next context → repeat. Each tool call is the model building its own context from reality.
+
+This is the opposite of stuffing everything into the system prompt. It's progressive disclosure driven by the model's own decisions.
+-->
+
+---
+layout: default
+---
+
+# Tool Calls: Das Modell kann nichts tun
 
 Das Modell gibt Text zurück. Manchmal ist dieser Text eine **JSON-Struktur**, die sagt: „Führe dieses Kommando aus."
 
@@ -843,9 +872,12 @@ Der Harness parst sie, führt sie aus und gibt das Ergebnis als neue Nachricht z
 
 ```json
 {
-  "type": "tool_call",
-  "name": "exec",
-  "arguments": "{\"command\": \"cd /workspace/q15 && git status\"}"
+  "id": "call_abc123",
+  "type": "function",
+  "function": {
+    "name": "exec",
+    "arguments": "{\"command\": \"cd /workspace/q15 && git status\"}"
+  }
 }
 ```
 
@@ -880,6 +912,7 @@ DEMO ACTIONS:
 
 KEY POINT: The model is the brain. The harness is the hands. Tool calls are the nerve signals between them.
 -->
+
 ---
 layout: default
 ---
@@ -904,7 +937,7 @@ nix shell nixpkgs#ffmpeg -c ffmpeg -i input.mp4 output.wav
 
 <v-clicks>
 
-- **Jedes Programm, auf Abruf** — das exec-Tool führt beliebige Kommandos aus; Nix-Pakete machen jedes Tool ohne Vorinstallation verfügbar
+- **Jedes Programm bei Bedarf** — das exec-Tool führt beliebige Kommandos aus; Nix-Pakete machen jedes Tool ohne Vorinstallation verfügbar
 - **Reproduzierbar** — dieselbe nixpkgs-Revision = dieselbe Umgebung, jedes Mal
 - **Keine Docker-Images zu pflegen** — der Agent baut sich seine eigene Runtime zusammen
 
@@ -931,51 +964,7 @@ This means: the agent doesn't need you to pre-install tools. It doesn't need a D
 
 This is crucial for agency: the model isn't limited to a fixed set of tools. It can reach into the entire nixpkgs repository (80,000+ packages) and use whatever it needs. The exec tool + nix is what makes q15 a general-purpose agent, not just a chatbot with a few API calls.
 -->
----
-layout: default
----
 
-# Agency: Was macht einen Agenten aus?
-
-Ein Agent ist etwas, das eine **Aktion ausführen** kann.
-
-<div class="mt-6">
-
-> "An agent is just tools in a loop." — Simon Willison
-
-</div>
-
-<v-clicks>
-
-- Ein Chatbot beantwortet Fragen. Er hat keine Tools. Keinen Loop. Keine Aktion.
-- Ein Agent hat Tools, einen Loop und die Fähigkeit, **auf die Welt einzuwirken** — Dateien lesen, Befehle ausführen, das Web durchsuchen, Code schreiben.
-- Die Tools geben dem Modell die Fähigkeit zur Aktion. Der Loop gibt ihm Ausdauer. Der Harness gibt ihm Struktur.
-
-</v-clicks>
-
-<v-click>
-
-<div class="mt-6 text-center text-lg opacity-80">
-
-Ohne Tools ist es eine Suchmaschine mit Thesaurus. Mit Tools und einem Loop ist es ein Agent.
-
-</div>
-
-</v-click>
-
-<!--
-1 minute. Define agency clearly.
-
-Simon Willison's definition: "An agent is just tools in a loop." This is the simplest correct definition.
-
-A chatbot: text in, text out. No tools, no loop, no action. It can answer questions but can't DO anything.
-
-An agent: tools + a loop. It can read files, run commands, search the web, write code, and feed the results back to the model for the next decision. It can act on the world.
-
-The harness is what makes the difference. The harness provides the tools, manages the loop, compiles the context. Without the harness, you have a chatbot. With the harness, you have an agent.
-
-Don't overthink this definition. Don't anthropomorphize. It's tools in a loop.
--->
 ---
 layout: default
 ---
@@ -1048,8 +1037,9 @@ This is the culmination of harness engineering: the agent extends its own capabi
 
 DEMO: Show the jared-mail repo. Walk through the code. Point out: this was generated by the agent, not by a human. The agent uses this software every day.
 
-From Dex's talk: "Don't outsource the thinking." The agent didn't replace human thinking — it amplified it. The human decided what to build; the agent figured out how.
+The agent didn't replace human thinking — it amplified it. The human decided what to build; the agent figured out how.
 -->
+
 ---
 layout: default
 ---
@@ -1080,6 +1070,8 @@ Ohne diese läuft der Loop ewig. Das Modell ruft fröhlich 10.000-mal dasselbe f
 <!--
 1.5 minutes. Reliability is part of harness engineering.
 
+Concrete example: once, Jared got stuck calling `git status` repeatedly because the repo path was wrong. The loop detector caught it — same tool, same arguments, twice in a row. Without it, the model would have burned through 200 turns. Tell this story.
+
 The loop is powerful but dangerous. Without exit conditions, it runs forever. Each exit condition maps to a real failure mode:
 
 - Stop token: normal completion. The model says "I'm done" by not emitting tool calls.
@@ -1087,8 +1079,9 @@ The loop is powerful but dangerous. Without exit conditions, it runs forever. Ea
 - Circuit breakers: if a tool fails 5 times in a row, something is structurally wrong.
 - Loop detectors: the model gets stuck — same tool, same args. Break out.
 
-From Dex's talk: "mindful of your trajectory." If the model keeps failing and you keep correcting it, the trajectory of the conversation teaches it to fail. Exit conditions prevent this mechanically.
+"mindful of your trajectory." If the model keeps failing and you keep correcting it, the trajectory of the conversation teaches it to fail. Exit conditions prevent this mechanically.
 -->
+
 ---
 layout: default
 ---
@@ -1119,16 +1112,16 @@ Diese verändern den Context, den das Modell beim nächsten Mal sieht. Das Model
 
 <div class="mt-4 text-center text-sm opacity-60">
 
-Dex' „intentional compaction" war manuell. q15s cognition jobs sind die automatisierte Version — der Agent komprimiert, bereinigt und reorganisiert seinen eigenen Context zwischen den Turns, ohne gefragt zu werden.
+Die bisherige „intentional compaction" war manuell. q15s cognition jobs sind die automatisierte Version — der Agent komprimiert, bereinigt und reorganisiert seinen eigenen Context zwischen den Turns, ohne gefragt zu werden.
 
 </div>
 
 </v-click>
 
 <!--
-2 minutes. The most interesting part — and the direct answer to Dex's manual compaction.
+2 minutes. The most interesting part — and the direct answer to manual compaction.
 
-Dex's approach: manually compress context into a markdown file, review it, tag it, start fresh. This is "intentional compaction" — a human decides what to keep.
+The manual approach: compress context into a markdown file, review it, tag it, start fresh. This is "intentional compaction" — a human decides what to keep.
 
 q15's approach: cognition jobs run between turns, automatically. The model doesn't see them. The user doesn't see them. But the context changes:
 
@@ -1138,82 +1131,11 @@ q15's approach: cognition jobs run between turns, automatically. The model doesn
 
 Each cognition job can run on a DIFFERENT model — cheaper models for consolidation, stronger models for extraction. This is provider abstraction in action.
 
-This is the agent's unconscious — behavior shaped by context the model didn't ask for. And it's the automated version of what Dex does by hand.
+This is the agent's unconscious — behavior shaped by context the model didn't ask for. And it's the automated version of what humans do by hand.
 
 If someone asks about "loop engineering": this is it. Cognition jobs are the automations. Working memory is the on-disk state the loop reads each run. Sub-agents (the verification review) are the maker-checker split. The harness isn't replaced by the loop — it enables it.
 -->
----
-layout: default
----
 
-# Die Demo, auf einem Bildschirm
-
-<div class="text-sm opacity-70 mb-2">
-
-All das ist im Payload-Dump sichtbar. Ein Befehl erzählt die ganze Geschichte:
-
-</div>
-
-```bash
-./recipes.sh loop-trace dump.jsonl
-```
-
-```text
-REQ  14:50:03  msgs=3   model=claude-sonnet-4
-RESP 14:50:05  finish=tool_calls  msgs=4
-REQ  14:50:05  msgs=5   model=claude-sonnet-4
-RESP 14:50:07  finish=tool_calls  msgs=6
-REQ  14:50:07  msgs=7   model=claude-sonnet-4
-RESP 14:50:09  finish=stop  msgs=8
-```
-
-<div class="mt-4 text-sm opacity-70">
-
-- `growing-payload` — beobachte, wie message_count mit jedem Turn wächst
-- `tool-calls` — sieh, was das Modell zur Ausführung entschieden hat
-- `wire-pair 0` — der vollständige HTTP-Request/Response für einen Turn
-- `live-tail-full` — streame es in Echtzeit, während du eine Telegram-Nachricht sendest
-
-</div>
-
-<div class="mt-4 text-center">
-  <span class="demo-cue">DEMO: die vollständige Sequenz, live</span>
-</div>
-
-<!--
-2 minutes. This is the demo summary slide — show the recipes and walk through the live demo.
-
-DEMO COMMANDS (copy/paste):
-  DUMP=~/q15-runtime/jared/logs/dump.jsonl
-
-  # 1. Start live tail — then send Jared a message in Telegram
-  ./recipes.sh live-tail-full "$DUMP"
-
-  # Ctrl+C after the conversation finishes
-
-  # 2. One-line loop summary
-  ./recipes.sh loop-trace "$DUMP"
-
-  # 3. Payload growing each turn
-  ./recipes.sh growing-payload "$DUMP"
-
-  # 4. Full first wire request (scroll through the bloated payload)
-  ./recipes.sh wire-request-first "$DUMP"
-
-  # 5. Full request + response for the tool-call turn
-  ./recipes.sh wire-pair 1 "$DUMP"
-
-DEMO MESSAGE to send in Telegram:
-  "Search the web for what happened in tech news today"
-  → triggers a web_search tool call with visible arguments
-
-PRESENTATION SETUP: Split screen — Telegram left, terminal right. Or tmux with two panes.
-
-BACKUP PLAN if live demo fails:
-- Use the pre-captured sample.jsonl in demo-tools/
-- Run the same recipes against it
-- The talk still works — the recipes show the same structure
--->
 ---
 layout: default
 ---
@@ -1222,13 +1144,10 @@ layout: default
 
 <v-clicks>
 
-- Die Model-API ist das **kleinste Stück**. Alles andere ist der Harness.
-- **Context assembly** ist die eigentliche Ingenieursarbeit — nicht prompt engineering, harness engineering.
-- **Skills** kodieren wiederverwendbares Wissen als Code. Der Agent entdeckt und nutzt sie bei Bedarf.
-- **Tools + bash + nix** geben dem Agenten die Fähigkeit, auf beliebige Software einzuwirken — und seine eigene zu schreiben.
-- **Cognition** ist automatisierte Kompaktierung. Der Agent verwaltet seinen eigenen Context, ohne gefragt zu werden.
-- **Provider abstraction** bedeutet, dass es dir egal wird, welches Modell am anderen Ende sitzt.
-- **Loop engineering** ist die nächste Etage — der Harness ist das Fundament. Dieselben Bausteine, nach einem Zeitplan.
+- Das Modell-API ist das **kleinste Stück**. Alles andere ist der Harness.
+- **Context-Assembly** ist das eigentliche Engineering — nicht Prompt Engineering, sondern Harness Engineering.
+- **Tools + Bash + Nix** geben dem Agenten die Fähigkeit, auf jede Software einzuwirken — und eigene Tools zu schreiben.
+- **Cognition** ist automatisierte Kompaktierung. Der Agent verwaltet seinen eigenen Context, ohne danach gefragt zu werden.
 
 </v-clicks>
 
@@ -1254,12 +1173,13 @@ layout: default
 
 The model API is the smallest piece — this is the thesis from the beginning, restated with the demo as evidence. You saw how little the model does (text in, text out) and how much the harness does (compile, assemble, parse, execute, loop, exit, remember, consolidate).
 
-From Dex's talk: "don't outsource the thinking." AI cannot replace thinking. It can only amplify the thinking you have done or the lack of thinking you have done. The harness is the amplifier. The thinking is still yours.
+"don't outsource the thinking." AI cannot replace thinking. It can only amplify the thinking you have done or the lack of thinking you have done. The harness is the amplifier. The thinking is still yours.
 
 Harness engineering is the discipline of building that amplifier well: managing context so the model stays in the smart zone, encoding knowledge as skills so the agent doesn't reinvent it each time, providing tools so the agent can act and build its own tools, and running cognition jobs so the context self-optimizes.
 
-Loop engineering — the layer above the harness — is what happens when these pieces run on a schedule: cognition jobs as automations, sub-agents as the maker-checker split, persistent memory as the state layer. q15 already has these primitives. The harness isn't outdated; it's the foundation the loop is built on. As Addy Osmani put it: "Build the loop. But build it like someone who intends to stay the engineer, not just the person who presses go."
+q15 is open-source. The payload dump lets you see exactly what goes over the wire. Build your own harness — the model is the smallest piece.
 -->
+
 ---
 layout: center
 class: text-center
@@ -1269,7 +1189,7 @@ class: text-center
 
 <div class="text-lg opacity-80 mt-4">
 
-Fragen? Lass uns eintauchen.
+Fragen?
 
 </div>
 
@@ -1298,30 +1218,28 @@ Open the floor for Q&A. Have the demo still running in case someone wants to see
 Total time budget:
 - Slide 1  (title):               0.5 min
 - Slide 2  (Krang brain):        0.5 min
-- Slide 3  (Krang body):          1 min
+- Slide 3  (Krang body + q15):    1 min
 - Slide 4  (context window):     2 min
 - Slide 5  (dumb zone):           2 min
 - Slide 6  (the pivot):           2 min
 - Slide 7  (what is HE):          1.5 min
-- Slide 8  (messages API viz):    2 min
-- Slide 9  (API stateless + demo): 2 min
-- Slide 10 (payload grows + demo): 3 min
-- Slide 11 (harness loop):        2 min
-- Slide 12 (core/working memory):  2 min
-- Slide 13 (skills):              2 min
-- Slide 14 (MCP):                 1 min
-- Slide 15 (tools):               1.5 min
-- Slide 16 (provider):            1.5 min
+- Slide 8  (agency):              1 min
+- Slide 9  (messages API viz):    2 min
+- Slide 10 (API stateless + demo): 2 min
+- Slide 11 (provider):            1.5 min
+- Slide 12 (payload grows + demo): 3 min
+- Slide 13 (harness loop):        2 min
+- Slide 14 (core/working memory):  2 min
+- Slide 15 (skills):              2 min
+- Slide 16 (tools):               1.5 min
 - Slide 17 (tool calls + demo):   2 min
 - Slide 18 (bash + nix):          2 min
-- Slide 19 (agency):              1 min
-- Slide 20 (self-writing tools):   3 min
-- Slide 21 (exit conditions):     1.5 min
-- Slide 22 (cognition):           2 min
-- Slide 23 (demo summary):        2 min
-- Slide 24 (what I learned):      2 min
-- Slide 25 (thanks):              0.5 min
-Total: ~34.5 min content + ~10.5 min Q&A = ~45 min
+- Slide 19 (self-writing tools):   3 min
+- Slide 20 (exit conditions):     1.5 min
+- Slide 21 (cognition):           2 min
+- Slide 22 (what I learned):      2 min
+- Slide 23 (thanks):              0.5 min
+Total: ~33 min content + ~12 min Q&A = ~45 min
 
 BACKUP PLAN if live demo fails:
 - Use sample.jsonl in demo-tools/ with the same recipes
