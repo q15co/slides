@@ -583,15 +583,11 @@ layout: default
 q15 spricht OpenAI-compatible. Der Provider ist austauschbar.
 
 <div class="mt-4 flex items-center justify-center gap-2">
-
-  <!-- q15 box -->
   <div class="flex flex-col items-center rounded-xl border-2 border-white/20 bg-black/30 px-6 py-6">
     <img src="/q15-logo.svg" alt="q15" class="w-14 h-14 mb-2" />
     <div class="text-lg font-bold">q15</div>
     <div class="text-xs opacity-60 mt-1">harness</div>
   </div>
-
-  <!-- Arrow -->
   <div class="flex flex-col items-center mx-1">
     <div class="text-[10px] opacity-50 mb-1 whitespace-nowrap">OpenAI-compatible</div>
     <div class="font-mono text-[10px] opacity-40 whitespace-nowrap">/v1/chat/completions</div>
@@ -599,11 +595,7 @@ q15 spricht OpenAI-compatible. Der Provider ist austauschbar.
     <div class="text-base opacity-40">←</div>
     <div class="font-mono text-[10px] opacity-40 whitespace-nowrap">JSON response</div>
   </div>
-
-  <!-- Providers -->
   <div class="flex flex-col gap-3">
-
-    <!-- Ollama Cloud -->
     <div class="flex items-center gap-3 rounded-xl border-2 border-white/20 bg-black/30 px-5 py-3">
       <img src="/ollama-icon.png" alt="Ollama" class="w-9 h-9" />
       <div>
@@ -611,8 +603,6 @@ q15 spricht OpenAI-compatible. Der Provider ist austauschbar.
         <div class="text-[10px] opacity-60">GLM · Kimi · MiniMax · DeepSeek · ...</div>
       </div>
     </div>
-
-    <!-- OpenAI -->
     <div class="flex items-center gap-3 rounded-xl border-2 border-white/20 bg-black/30 px-5 py-3">
       <img src="/openai-logo.svg" alt="OpenAI" class="w-9 h-9" />
       <div>
@@ -620,9 +610,7 @@ q15 spricht OpenAI-compatible. Der Provider ist austauschbar.
         <div class="text-[10px] opacity-60">GPT-5 · Codex · o-series · ...</div>
       </div>
     </div>
-
   </div>
-
 </div>
 
 <v-clicks>
