@@ -803,7 +803,7 @@ Ein Skill ist eine Markdown-Datei, die dem Agenten beibringt, wie er etwas macht
 
 <div class="mt-2 text-xs">
 
-```markdown
+```text
 # /skills/cloudflare/SKILL.md
 ---
 name: cloudflare
@@ -811,11 +811,9 @@ description: Build with Cloudflare Workers, Pages, KV, R2, AI.
 ---
 
 ## Commands
-\`\`\`bash
-wrangler deploy       # deploy a Worker
-wrangler kv:key put    # write to KV
-wrangler r2 object put # upload to R2
-\`\`\`
+$ wrangler deploy       # deploy a Worker
+$ wrangler kv:key put    # write to KV
+$ wrangler r2 object put # upload to R2
 ```
 
 </div>
