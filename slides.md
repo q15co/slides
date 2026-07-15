@@ -578,51 +578,57 @@ The provider here is Ollama Cloud — an OpenAI-compatible endpoint. Any model b
 layout: default
 ---
 
-# Der Provider: Ollama Cloud
+# Die Provider
 
 q15 spricht OpenAI-compatible. Der Provider ist austauschbar.
 
-<div class="mt-6 flex items-center justify-center gap-0">
+<div class="mt-4 flex items-center justify-center gap-2">
 
   <!-- q15 box -->
-  <div class="flex flex-col items-center rounded-xl border-2 border-white/20 bg-black/30 px-8 py-6">
-    <div class="text-2xl font-bold">q15</div>
+  <div class="flex flex-col items-center rounded-xl border-2 border-white/20 bg-black/30 px-6 py-6">
+    <img src="/q15-logo.svg" alt="q15" class="w-14 h-14 mb-2" />
+    <div class="text-lg font-bold">q15</div>
     <div class="text-xs opacity-60 mt-1">harness</div>
   </div>
 
   <!-- Arrow -->
-  <div class="flex flex-col items-center mx-2">
+  <div class="flex flex-col items-center mx-1">
     <div class="text-[10px] opacity-50 mb-1 whitespace-nowrap">OpenAI-compatible</div>
-    <div class="flex items-center text-xs opacity-40">
-      <div class="font-mono whitespace-nowrap">/v1/chat/completions</div>
-      <div class="text-xl mx-2">→</div>
-    </div>
-    <div class="flex items-center text-xs opacity-40 mt-1">
-      <div class="text-xl mr-2">←</div>
-      <div class="font-mono whitespace-nowrap">JSON response</div>
-    </div>
+    <div class="font-mono text-[10px] opacity-40 whitespace-nowrap">/v1/chat/completions</div>
+    <div class="text-base opacity-40 my-0.5">→</div>
+    <div class="text-base opacity-40">←</div>
+    <div class="font-mono text-[10px] opacity-40 whitespace-nowrap">JSON response</div>
   </div>
 
-  <!-- Ollama Cloud box -->
-  <div class="flex flex-col items-center rounded-xl border-2 border-white/20 bg-black/30 px-8 py-6">
-    <img src="/ollama-icon.png" alt="Ollama" class="w-10 h-10 mb-2" />
-    <div class="text-lg font-bold">Ollama Cloud</div>
-    <div class="text-xs opacity-50 mb-4">OpenAI-compatible API</div>
-    <div class="flex flex-col gap-1.5 text-xs opacity-70">
-      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-green-400/70"></span> GLM-5.2</div>
-      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-400/70"></span> Kimi K2.7</div>
-      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-400/70"></span> MiniMax M3</div>
-      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400/70"></span> DeepSeek</div>
-      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/30"></span> ...</div>
+  <!-- Providers -->
+  <div class="flex flex-col gap-3">
+
+    <!-- Ollama Cloud -->
+    <div class="flex items-center gap-3 rounded-xl border-2 border-white/20 bg-black/30 px-5 py-3">
+      <img src="/ollama-icon.png" alt="Ollama" class="w-9 h-9" />
+      <div>
+        <div class="text-sm font-bold">Ollama Cloud</div>
+        <div class="text-[10px] opacity-60">GLM · Kimi · MiniMax · DeepSeek · ...</div>
+      </div>
     </div>
+
+    <!-- OpenAI -->
+    <div class="flex items-center gap-3 rounded-xl border-2 border-white/20 bg-black/30 px-5 py-3">
+      <img src="/openai-logo.svg" alt="OpenAI" class="w-9 h-9" />
+      <div>
+        <div class="text-sm font-bold">OpenAI</div>
+        <div class="text-[10px] opacity-60">GPT-5 · Codex · o-series · ...</div>
+      </div>
+    </div>
+
   </div>
 
 </div>
 
 <v-clicks>
 
-- **Ollama Cloud** — OpenAI-compatible API, viele Modelle hinter einem Endpoint
-- **Ein Endpoint, jedes Modell** — wechsle Modelle, ohne den Harness-Code zu ändern
+- **OpenAI-compatible** — jeder Provider spricht dasselbe Protokoll
+- **Ein Endpoint, jedes Modell** — wechsle Modelle oder Provider, ohne den Harness-Code zu ändern
 - **Token-Caching, Rate Limits, Fallbacks** — vom Provider gehandhabt, transparent für q15
 
 </v-clicks>
@@ -630,13 +636,11 @@ q15 spricht OpenAI-compatible. Der Provider ist austauschbar.
 <!--
 1.5 minutes. Provider abstraction is a key harness engineering concept.
 
-q15 doesn't talk to Anthropic, OpenAI, or Google directly. It talks to an OpenAI-compatible endpoint. Ollama Cloud exposes many models behind one OpenAI-compatible API surface.
+q15 doesn't talk to Anthropic, OpenAI, or Google directly. It talks to OpenAI-compatible endpoints. Ollama Cloud exposes many open models behind one API. OpenAI gives access to GPT-5, Codex, and the o-series. Same protocol, different models, different tradeoffs.
 
-This means: the harness code doesn't change when you switch models. The messages array format is the same. The tool call format is the same. The model is a pluggable backend.
+This means: the harness code doesn't change when you switch models or providers. The messages array format is the same. The tool call format is the same. The model is a pluggable backend.
 
 This is important for harness engineering: the context compilation, the tools, the skills, the loop — all of that is provider-agnostic. The provider is just the text-generation engine at the end of the wire.
-
-Token caching also lives at the provider level — the provider handles it, the harness doesn't need to know.
 -->
 
 ---
