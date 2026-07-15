@@ -982,24 +982,24 @@ layout: default
 
 # Self-writing tools: Der Agent baut sein eigenes Toolkit
 
-Der Agent hat `bash` und `write_file`. Das reicht, um seine eigene Software zu schreiben.
+Der Agent hat `bash` und `write_file`. Das reicht, um eigene Software zu schreiben — Software, die er dann selbst nutzt.
 
 <div class="mt-4 text-sm opacity-80">
 
-Der Ablauf: Das Modell liest Cloudflares Dokumentation (via web_fetch), versteht die API, schreibt ein Go-Programm (via write_file), testet es (via exec) und iteriert, bis es funktioniert.
+Der Ablauf: Das Modell liest Dokumentation (via web_fetch), versteht die API, schreibt ein Programm (via write_file), testet es (via exec) und iteriert, bis es funktioniert.
 
 </div>
 
 <div class="mt-4">
 
 ```text
-1. web_fetch → Cloudflare-Email-API-Dokumentation lesen
-2. write_file → email-forwarder.go schreiben
-3. exec → go build && go test
+1. web_fetch → Dokumentation lesen
+2. write_file → Code schreiben
+3. exec → build && test
 4. read_file → Testausgabe lesen
 5. write_file → Bug fixen
-6. exec → go build && go test  ✓ bestanden
-7. exec → Deployment mit wrangler
+6. exec → build && test  ✓ bestanden
+7. exec → deployen
 ```
 
 </div>
@@ -1008,31 +1008,37 @@ Der Ablauf: Das Modell liest Cloudflares Dokumentation (via web_fetch), versteht
 
 <div class="mt-6 grid grid-cols-2 gap-4">
   <div class="p-4 bg-blue-500 bg-opacity-10 rounded-lg text-sm">
-    <div class="font-bold mb-1">Cloudflare Email Agent</div>
-    <div class="opacity-70 text-xs">Ein echtes Tool, das q15 selbst geschrieben hat: liest Cloudflare-Email-APIs, leitet Nachrichten weiter, verwaltet Routing-Regeln. Vollständig durch tool calls erstellt — kein Mensch hat den Code geschrieben.</div>
+    <div class="font-bold mb-1">jared-mail</div>
+    <div class="opacity-70 text-xs">Ein E-Mail-Service, den Jared selbst geschrieben hat: empfängt E-Mails an jared@q15.co, parst sie, speichert sie als Markdown, sendet Antworten. Jared nutzt es jeden Tag — Software vom Agenten, für den Agenten.</div>
   </div>
   <div class="p-4 bg-purple-500 bg-opacity-10 rounded-lg text-sm">
-    <div class="font-bold mb-1">Wie</div>
-    <div class="opacity-70 text-xs">Das Modell nutzte read_file, um die Cloudflare-Skill zu studieren, web_fetch für die API-Dokumentation, write_file für den Go-Quellcode und exec zum Bauen, Testen und Deployen.</div>
+    <div class="font-bold mb-1">Diese Slide-Deck</div>
+    <div class="opacity-70 text-xs">Diese Präsentation hat Jared geschrieben, übersetzt, debuggt und deployed. Software, die vom Agenten geschrieben und genutzt wird.</div>
   </div>
 </div>
 
 </v-click>
 
 <div class="mt-4 text-center">
-  <span class="demo-cue">DEMO: Repository zeigen</span>
+  <span class="demo-cue">DEMO: jared-mail Repo zeigen</span>
 </div>
 
 <!--
-3 minutes. This is the payoff slide — the agent as its own tool-builder.
+3 minutes. This is the payoff slide — the agent as its own software developer.
 
-The key insight: if the agent can write files and run commands, it can write its own tools. It doesn't need every tool pre-built. It can read documentation, understand an API, write code, test it, and deploy it — all through the same tools it uses for everything else.
+The key insight: if the agent can write files and run commands, it can write its own software — software it then uses itself. Not just tools for external services, but projects the agent builds and runs.
 
-The Cloudflare email agent: q15 was asked to create an email forwarding tool using Cloudflare's email routing API. It:
+jared-mail: Jared needed to send and receive emails. So it wrote a Cloudflare Worker that handles email routing, parsing, and markdown storage. Jared uses it every day to communicate with the user. Software written by the agent, for the agent.
+
+This slide deck: Jared wrote this presentation, translates it, fixes bugs, and deploys it. The agent maintains the software it runs on.
+
+The pattern is the same for both: read docs, write code, test, iterate, deploy. The difference is that this software becomes part of the agent's own toolkit — it writes and uses its own software.
+
+How jared-mail was built:
 1. Read the Cloudflare skill (markdown) to understand the API surface
 2. Fetched the Cloudflare API docs from the web to get exact endpoints and parameters
-3. Wrote a Go program that implements email forwarding
-4. Built and tested it using exec (go build, go test)
+3. Wrote the Worker code (TypeScript, Cloudflare Agents SDK)
+4. Built and tested it using exec
 5. Fixed bugs by reading test output and editing the file
 6. Deployed using wrangler (via exec)
 
@@ -1040,7 +1046,7 @@ No human wrote the code. The agent wrote it by composing tools: read_file + web_
 
 This is the culmination of harness engineering: the agent extends its own capabilities. The harness provides the primitives (read, write, execute), and the agent composes them into higher-order tools.
 
-DEMO: Show the actual repo. Walk through the code. Point out: this was generated by the agent, not by a human. The agent read docs, wrote code, tested it, fixed bugs, deployed it.
+DEMO: Show the jared-mail repo. Walk through the code. Point out: this was generated by the agent, not by a human. The agent uses this software every day.
 
 From Dex's talk: "Don't outsource the thinking." The agent didn't replace human thinking — it amplified it. The human decided what to build; the agent figured out how.
 -->
