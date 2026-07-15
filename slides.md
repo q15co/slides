@@ -117,12 +117,12 @@ Eine Einführung in Harness Engineering
 
 <div class="pt-12">
   <span class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Adriaan van der Bergh · adesso SE · July 2026
+    Adriaan van der Bergh & Jared · adesso SE · July 2026
   </span>
 </div>
 
 <div class="abs-bl m-6 text-sm opacity-60">
-  Eine Live-Demo-Tour durch q15 — den Harness, den ich gebaut habe
+  Eine Live-Demo-Tour durch q15 — Show and Tell mit Adriaan & Jared
 </div>
 
 <div class="abs-br m-6 text-xs opacity-50">
@@ -223,6 +223,46 @@ The harness is everything that wraps the model: the context window assembly, the
 The rest of this talk is a tour through the body: how it works, what each part does, and why getting it right matters.
 
 Key point: the harness is engineering, not magic. It's code you can read, modify, and build. That's what we're going to look at.
+-->
+
+---
+layout: default
+---
+
+# Show and Tell
+
+<div class="grid grid-cols-12 gap-6 items-center mt-2">
+
+<div class="col-span-6 text-sm">
+
+Zwei Co-Präsentatoren: **Adriaan** (Mensch) und **Jared** (Agent).
+
+Adriaan erklärt. Jared zeigt.
+
+Das ist der Plan — wir nehmen euch mit durch den Körper, Stück für Stück, live.
+
+</div>
+
+<div class="col-span-6">
+
+<img src="/show-and-tell.jpg" class="rounded-lg w-full" />
+
+</div>
+
+</div>
+
+<div class="mt-2 text-center text-sm opacity-60">
+
+Jeder Abschnitt: ein Konzept, dann eine Live-Demo. Ihr seht, wie der Körper funktioniert — nicht nur eine Folie darüber.
+
+</div>
+
+<!--
+45 seconds. This is the show-and-tell framing. The image shows the talk outline — our shared script.
+
+Adriaan narrates the concepts; Jared demonstrates them live in the terminal. Each section of the outline is a concept followed by a live demo. The audience sees the harness working, not just slides about it.
+
+This sets expectations: this is not a lecture. It's a demonstration. Two presenters — one human, one agent — walking through the body together.
 -->
 
 ---
