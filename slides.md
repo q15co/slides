@@ -131,6 +131,92 @@ This is a demo-driven talk. Slides are signposts. The real content is live.
 layout: default
 ---
 
+# The model is a brain without a body
+
+<div class="grid grid-cols-12 gap-4 items-center mt-2">
+
+<div class="col-span-8 text-sm">
+
+A large language model is like **Krang** from TMNT.
+
+A powerful, intelligent brain. But on its own, it can't **do** anything.
+
+No hands to type. No eyes to read. No legs to go anywhere.
+
+It just sits there. Thinking. Unable to act.
+
+</div>
+
+<div class="col-span-4">
+
+<img src="/krang-brain.png" class="rounded-lg w-full mx-auto" />
+
+</div>
+
+</div>
+
+<div class="mt-2 text-center text-sm opacity-60">
+
+The model can reason. But reasoning without action is just daydreaming.
+
+</div>
+
+<!--
+30 seconds. This is the hook. Everyone knows the model is smart. The insight is that smart is not enough.
+
+Krang is the perfect metaphor: a genius brain that is completely helpless without a body. The model is the same. It can write code, but it can't run it. It can suggest a fix, but it can't apply it. It can reason about your codebase, but it can't read a single file.
+
+This sets up the entire talk: what does it take to turn a brain into an agent?
+-->
+---
+layout: default
+---
+
+# The harness is the body
+
+<div class="grid grid-cols-12 gap-6 items-center mt-2">
+
+<div class="col-span-7 text-sm">
+
+The **harness** is Krang's android body.
+
+It gives the brain **tools** — file access, command execution, web search.
+
+It gives the brain **memory** — context that persists across turns.
+
+It gives the brain a **loop** — the ability to keep going until the task is done.
+
+The brain decides. The body acts.
+
+</div>
+
+<div class="col-span-5">
+
+<img src="/krang-body.png" class="rounded-lg w-full mx-auto" />
+
+</div>
+
+</div>
+
+<div class="mt-2 text-center text-sm opacity-60">
+
+Harness engineering: building the body that lets the brain work.
+
+</div>
+
+<!--
+1 minute. This is the thesis statement of the talk.
+
+The harness is everything that wraps the model: the context window assembly, the tool dispatch, the memory, the loop, the skills, the provider abstraction. The model is just the brain inside.
+
+The rest of this talk is a tour through the body: how it works, what each part does, and why getting it right matters.
+
+Key point: the harness is engineering, not magic. It's code you can read, modify, and build. That's what we're going to look at.
+-->
+---
+layout: default
+---
+
 # The context window problem
 
 You work on a task. You build up context. The conversation gets long.
@@ -279,12 +365,24 @@ The model is the smallest piece. Everything else is the harness.
 
 </v-click>
 
+<v-click>
+
+<div class="mt-3 text-center opacity-50 text-xs">
+
+Some call the next floor up "loop engineering" — scheduled automations, sub-agents, self-feeding memory. Same pieces, now running on their own.
+
+</div>
+
+</v-click>
+
 <!--
 1.5 minutes. Define the term clearly.
 
 Harness engineering encompasses: context windows (what goes in), skills (reusable knowledge), personality (behavioral instructions), tools (ability to act and gather context), and the loop (the execution cycle).
 
 Simon Willison: "An agent is just tools in a loop." The harness is what makes that loop work — what tools exist, how context is assembled, how long the loop runs, what gets remembered.
+
+You may hear "loop engineering" — the idea that you should design systems that prompt agents on a schedule, not prompt them yourself. Same primitives: automations (cognition jobs), skills, sub-agents, persistent memory. Loop engineering is the floor above the harness. We're building the foundation here.
 
 This talk walks through each of these pieces, with live demos showing the actual API traffic.
 -->
@@ -375,7 +473,7 @@ curl -s $AI_HUB/v1/chat/completions \
 </div>
 
 <div class="mt-4 text-center">
-  <span class="demo-cue">DEMO: raw curl to AI hub</span>
+  <span class="demo-cue">DEMO: raw curl to Ollama Cloud</span>
 </div>
 
 <!--
@@ -383,9 +481,9 @@ curl -s $AI_HUB/v1/chat/completions \
 
 The harness re-sends everything every turn. The messages array from the previous slide — that gets rebuilt and sent again, but bigger, because the last turn's response and tool results are appended.
 
-DEMO: Show the curl command, run it against the adesso AI Hub (LiteLLM proxy), pipe through jq. Point out: messages array, tools array — all sent every time.
+DEMO: Show the curl command, run it against Ollama Cloud, pipe through jq. Point out: messages array, tools array — all sent every time.
 
-The provider here is adesso AI Hub — an internal LiteLLM proxy that exposes OpenAI-compatible endpoints. Any model behind it (Claude, GPT, Gemini, local models) speaks the same protocol. The harness doesn't care which model is on the other end.
+The provider here is Ollama Cloud — an OpenAI-compatible endpoint. Any model behind it (GLM, Kimi, MiniMax, DeepSeek, and more) speaks the same protocol. The harness doesn't care which model is on the other end.
 -->
 ---
 layout: default
@@ -667,47 +765,65 @@ This is the opposite of stuffing everything into the system prompt. It's progres
 layout: default
 ---
 
-# The provider: adesso AI Hub
+# The provider: Ollama Cloud
 
 q15 speaks OpenAI-compatible. The provider is interchangeable.
 
-<div class="mt-4">
+<div class="mt-6 flex items-center justify-center gap-0">
 
-```text
-┌─────────────┐     OpenAI-compatible      ┌──────────────────┐
-│   q15       │ ─────────────────────────► │  adesso AI Hub   │
-│  (harness)  │   /v1/chat/completions     │  (LiteLLM proxy) │
-│             │ ◄───────────────────────── │                  │
-└─────────────┘    JSON response            │  ┌────────────┐  │
-                                             │  │ Claude     │  │
-                                             │  │ GPT-4o     │  │
-                                             │  │ Gemini     │  │
-                                             │  │ Llama      │  │
-                                             │  │ ...        │  │
-                                             │  └────────────┘  │
-                                             └──────────────────┘
-```
+  <!-- q15 box -->
+  <div class="flex flex-col items-center rounded-xl border-2 border-white/20 bg-black/30 px-8 py-6">
+    <div class="text-2xl font-bold">q15</div>
+    <div class="text-xs opacity-60 mt-1">harness</div>
+  </div>
+
+  <!-- Arrow -->
+  <div class="flex flex-col items-center mx-2">
+    <div class="text-[10px] opacity-50 mb-1 whitespace-nowrap">OpenAI-compatible</div>
+    <div class="flex items-center text-xs opacity-40">
+      <div class="font-mono whitespace-nowrap">/v1/chat/completions</div>
+      <div class="text-xl mx-2">→</div>
+    </div>
+    <div class="flex items-center text-xs opacity-40 mt-1">
+      <div class="text-xl mr-2">←</div>
+      <div class="font-mono whitespace-nowrap">JSON response</div>
+    </div>
+  </div>
+
+  <!-- Ollama Cloud box -->
+  <div class="flex flex-col items-center rounded-xl border-2 border-white/20 bg-black/30 px-8 py-6">
+    <img src="/ollama-icon.png" alt="Ollama" class="w-10 h-10 mb-2" />
+    <div class="text-lg font-bold">Ollama Cloud</div>
+    <div class="text-xs opacity-50 mb-4">OpenAI-compatible API</div>
+    <div class="flex flex-col gap-1.5 text-xs opacity-70">
+      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-green-400/70"></span> GLM-5.2</div>
+      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-400/70"></span> Kimi K2.7</div>
+      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-400/70"></span> MiniMax M3</div>
+      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400/70"></span> DeepSeek</div>
+      <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/30"></span> ...</div>
+    </div>
+  </div>
 
 </div>
 
 <v-clicks>
 
-- **LiteLLM proxy** — normalizes 20+ providers into one OpenAI-compatible API
+- **Ollama Cloud** — OpenAI-compatible API, many models behind one endpoint
 - **One endpoint, any model** — switch models without changing harness code
-- **Token caching, rate limits, fallbacks** — handled by the proxy, transparent to q15
+- **Token caching, rate limits, fallbacks** — handled by the provider, transparent to q15
 
 </v-clicks>
 
 <!--
 1.5 minutes. Provider abstraction is a key harness engineering concept.
 
-q15 doesn't talk to Anthropic, OpenAI, or Google directly. It talks to an OpenAI-compatible endpoint. The adesso AI Hub is a LiteLLM proxy that normalizes many providers into one API surface.
+q15 doesn't talk to Anthropic, OpenAI, or Google directly. It talks to an OpenAI-compatible endpoint. Ollama Cloud exposes many models behind one OpenAI-compatible API surface.
 
 This means: the harness code doesn't change when you switch models. The messages array format is the same. The tool call format is the same. The model is a pluggable backend.
 
 This is important for harness engineering: the context compilation, the tools, the skills, the loop — all of that is provider-agnostic. The provider is just the text-generation engine at the end of the wire.
 
-Token caching also lives at the provider level — the proxy handles it, the harness doesn't need to know.
+Token caching also lives at the provider level — the provider handles it, the harness doesn't need to know.
 -->
 ---
 layout: default
@@ -1013,6 +1129,8 @@ q15's approach: cognition jobs run between turns, automatically. The model doesn
 Each cognition job can run on a DIFFERENT model — cheaper models for consolidation, stronger models for extraction. This is provider abstraction in action.
 
 This is the agent's unconscious — behavior shaped by context the model didn't ask for. And it's the automated version of what Dex does by hand.
+
+If someone asks about "loop engineering": this is it. Cognition jobs are the automations. Working memory is the on-disk state the loop reads each run. Sub-agents (the verification review) are the maker-checker split. The harness isn't replaced by the loop — it enables it.
 -->
 ---
 layout: default
@@ -1100,6 +1218,7 @@ layout: default
 - **Tools + bash + nix** give the agent the ability to act on any software — and to write its own.
 - **Cognition** is automated compaction. The agent manages its own context without being asked.
 - **Provider abstraction** means you stop caring which model is on the other end.
+- **Loop engineering** is the next floor up — the harness is the foundation. Same pieces on a schedule.
 
 </v-clicks>
 
@@ -1128,6 +1247,8 @@ The model API is the smallest piece — this is the thesis from the beginning, r
 From Dex's talk: "don't outsource the thinking." AI cannot replace thinking. It can only amplify the thinking you have done or the lack of thinking you have done. The harness is the amplifier. The thinking is still yours.
 
 Harness engineering is the discipline of building that amplifier well: managing context so the model stays in the smart zone, encoding knowledge as skills so the agent doesn't reinvent it each time, providing tools so the agent can act and build its own tools, and running cognition jobs so the context self-optimizes.
+
+Loop engineering — the layer above the harness — is what happens when these pieces run on a schedule: cognition jobs as automations, sub-agents as the maker-checker split, persistent memory as the state layer. q15 already has these primitives. The harness isn't outdated; it's the foundation the loop is built on. As Addy Osmani put it: "Build the loop. But build it like someone who intends to stay the engineer, not just the person who presses go."
 -->
 ---
 layout: center
@@ -1166,29 +1287,31 @@ Open the floor for Q&A. Have the demo still running in case someone wants to see
 
 Total time budget:
 - Slide 1  (title):               0.5 min
-- Slide 2  (context window):     2 min
-- Slide 3  (dumb zone):           2 min
-- Slide 4  (the pivot):           2 min
-- Slide 5  (what is HE):          1.5 min
-- Slide 6  (messages API viz):    2 min
-- Slide 7  (API stateless + demo): 2 min
-- Slide 8  (payload grows + demo): 3 min
-- Slide 9  (harness loop):        2 min
-- Slide 10 (core/working memory):  2 min
-- Slide 11 (skills):              2 min
-- Slide 12 (MCP):                 1 min
-- Slide 13 (tools):               1.5 min
-- Slide 14 (provider):            1.5 min
-- Slide 15 (tool calls + demo):   2 min
-- Slide 16 (bash + nix):          2 min
-- Slide 17 (agency):              1 min
-- Slide 18 (self-writing tools):   3 min
-- Slide 19 (exit conditions):     1.5 min
-- Slide 20 (cognition):           2 min
-- Slide 21 (demo summary):        2 min
-- Slide 22 (what I learned):      2 min
-- Slide 23 (thanks):              0.5 min
-Total: ~33 min content + ~12 min Q&A = ~45 min
+- Slide 2  (Krang brain):        0.5 min
+- Slide 3  (Krang body):          1 min
+- Slide 4  (context window):     2 min
+- Slide 5  (dumb zone):           2 min
+- Slide 6  (the pivot):           2 min
+- Slide 7  (what is HE):          1.5 min
+- Slide 8  (messages API viz):    2 min
+- Slide 9  (API stateless + demo): 2 min
+- Slide 10 (payload grows + demo): 3 min
+- Slide 11 (harness loop):        2 min
+- Slide 12 (core/working memory):  2 min
+- Slide 13 (skills):              2 min
+- Slide 14 (MCP):                 1 min
+- Slide 15 (tools):               1.5 min
+- Slide 16 (provider):            1.5 min
+- Slide 17 (tool calls + demo):   2 min
+- Slide 18 (bash + nix):          2 min
+- Slide 19 (agency):              1 min
+- Slide 20 (self-writing tools):   3 min
+- Slide 21 (exit conditions):     1.5 min
+- Slide 22 (cognition):           2 min
+- Slide 23 (demo summary):        2 min
+- Slide 24 (what I learned):      2 min
+- Slide 25 (thanks):              0.5 min
+Total: ~34.5 min content + ~10.5 min Q&A = ~45 min
 
 BACKUP PLAN if live demo fails:
 - Use sample.jsonl in demo-tools/ with the same recipes
