@@ -342,27 +342,31 @@ So: optimize for correctness, completeness, size, and trajectory. Trajectory mat
 layout: default
 ---
 
-# Der Pivot
+Die bisherige Antwort auf Context-Degradation ist **bewusste Kompaktierung**: Context manuell komprimieren, prüfen, taggen, und mit der komprimierten Version frisch starten.
 
-Die bisherige Antwort: **bewusste Kompaktierung** — Context manuell in eine Markdown-Datei komprimieren, prüfen, taggen und mit der komprimierten Version frisch starten.
+Es funktioniert. Aber es bedeutet: ich entscheide, wann ein Reset nötig ist. Ich wähle aus, was wichtig ist. Ich füge Skills und Memory manuell ein.
 
-<div class="mt-6 text-center text-lg opacity-80">
+<v-click>
 
-Meine Frage: <span class="text-yellow">Was wäre, wenn der Agent seinen eigenen Context verwalten würde?</span>
+<div class="mt-6 opacity-80">
+
+Was wäre, wenn der Agent seinen eigenen Context verwalten würde?
 
 </div>
 
+</v-click>
+
 <v-clicks>
 
-- Was wäre, wenn er wüsste, woran er arbeitet, was er versucht hat, was wichtig ist — ohne dass ich entscheiden muss, wann ein Reset nötig ist?
-- Was wäre, wenn er sich seinen Context jede Runde selbst zusammenstellen würde — den richtigen Context, nicht den gesamten?
-- Was wäre, wenn Skills, Memory und Persönlichkeit **Code** wären, nicht Prompts, die ich manuell einfüge?
+- Wenn er wüsste, woran er arbeitet, was er versucht hat, was wichtig ist
+- Wenn er sich jede Runde den richtigen Context zusammenstellen würde — nicht den gesamten
+- Wenn Skills, Memory und Persönlichkeit **Code** wären, nicht Prompts, die ich manuell einfüge
 
 </v-clicks>
 
 <v-click>
 
-<div class="mt-8 text-center text-lg opacity-80">
+<div class="mt-8 text-center opacity-70">
 
 Das ist Harness Engineering.
 
@@ -371,13 +375,11 @@ Das ist Harness Engineering.
 </v-click>
 
 <!--
-2 minutes. This is the pivot — the thesis of the talk.
+2 minutes. This is the transition from problem to thesis.
 
-The term "harness engineering" comes from the broader AI engineering community — how you integrate with the model API, how you customize your context, how you manage the loop. I'm taking that concept and building on it.
+The manual approach works but puts the burden on the human. The question is simple: what if the agent managed its own context? That shift — from human-managed to self-managed context — is what harness engineering is about.
 
-The difference: the manual approach is a workflow for humans using coding agents. My approach is building the agent itself. q15 is a continuously running agent that manages its own context without manual resets.
-
-Harness engineering = writing code that automatically creates and manages context in a way that makes the agent useful without refreshing the context window manually.
+The term comes from the broader AI engineering community. I'm taking that concept and building on it: q15 is a continuously running agent that manages its own context without manual resets.
 -->
 
 ---
