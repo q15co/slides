@@ -1321,3 +1321,4 @@ BACKUP PLAN if live demo fails:
 - Use sample.jsonl in demo-tools/ with the same recipes
 - The slides carry the concepts; the demo is the icing
 - Pre-recorded demo as last resort
+-->
