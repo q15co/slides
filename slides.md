@@ -94,6 +94,9 @@ fonts:
   .msg-tool-result { background: rgba(203,166,247,0.12); border-left: 3px solid #cba6f7; color: #d8c0ee; }
   .msg-label { font-weight: 700; font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; }
   .msg-content { opacity: 0.9; }
+
+  /* Hide buggy Goto dialog (Fuse.search('') returns all items, list bleeds into viewport) */
+  #slidev-goto-dialog { display: none !important; }
 </style>
 
 <script setup>
