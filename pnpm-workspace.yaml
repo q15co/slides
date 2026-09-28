@@ -1,0 +1,10 @@
+# Same 5-day supply-chain gate as the machine-level config, committed here so CI and
+# any other machine enforce it too. Raise/lower in one place only if you mean it globally.
+minimumReleaseAge: 7200
+
+allowBuilds:
+  esbuild: true
+  playwright-chromium: false
+  sharp: true
+  vue-demi: false
+  workerd: true
